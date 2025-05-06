@@ -1,0 +1,50 @@
+.vscode
+
+# Compiled Object files
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+
+# CMake ====
+bin/
+build/
+devel/
+CMakeFiles
+CMakeCache.txt
+CMakeOutput.log
+CMakeError.log
+Makefile
+cmake_install.cmake
+*.cmake
+*.ninja
+*.ninja_deps
+*.ninja_log
+*.cmake
+
+# Python ====
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.whl
+*.mypy_cache/
+*.pytest_cache/
+*.coverage
+*.hypothesis/
+*.tox/
+*.coveragerc
+
+# catkin ====
+*.catkin_workspace
+*.catkin_tools/
+*.catkin_tools_workspace
+*.catkin_tools_build/
+*.catkin_tools_test/
+*.catkin_tools_test_build/
