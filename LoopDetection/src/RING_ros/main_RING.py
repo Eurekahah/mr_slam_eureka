@@ -130,6 +130,8 @@ def detect_loop_icp(robotid_current, idx_current, pc_current, RING_current, TIRI
     RING_dists = []
     RING_angles = []
 
+    # 计算RING descriptor之间的距离和角度
+    # 描述符匹配
     for idx in range(len(pc_candidates)):
         dist, angle = fast_corr(TIRING_current, TIRING_candidates[idx])
         # print("Distance bewteen two RING descriptors: ", dist)
@@ -143,6 +145,7 @@ def detect_loop_icp(robotid_current, idx_current, pc_current, RING_current, TIRI
         print("No loop detected.")
 
     else:
+        # 排序选出最佳的匹配
         idxs_sorted = np.argsort(RING_dists)
         # downsample the point cloud
         # pc_down_pts = random_sampling(pc_current, num_points=cfg.num_icp_points)
@@ -156,6 +159,8 @@ def detect_loop_icp(robotid_current, idx_current, pc_current, RING_current, TIRI
         angle_matched_extra = angle_matched - cfg.num_ring//2
 
         # convert the matched angle from grids to radians
+        # 计算初始位姿
+        # 将匹配的角度从网格转换为弧度
         angle_matched_rad = angle_matched * 2 * np.pi / cfg.num_ring 
         angle_matched_extra_rad = angle_matched_extra * 2 * np.pi / cfg.num_ring  
 
@@ -191,18 +196,22 @@ def detect_loop_icp(robotid_current, idx_current, pc_current, RING_current, TIRI
         trans_y_bev = trans_x
 
         # convert to the lidar coordinate (x: forward, y: left, z: upward)
+        # 转换到雷达坐标系
         trans_x_lidar = -trans_x_bev
         trans_y_lidar = -trans_y_bev
 
+        # 初始位姿
         init_pose = np.linalg.inv(getSE3(trans_x_lidar, trans_y_lidar, rot_yaw))
         print("Loop detected.")
         print("Estimated translation: x: {}, y: {}, rotation: {}".format(trans_x_lidar, trans_y_lidar, rot_yaw))
 
+        
         # apply ICP to the matched point clouds 
         # pc_matched_down_pts = random_sampling(pc_matched, num_points=cfg.num_icp_points)
         times = time.time()
         # loop_transform, distances, iterations = icp(pc_down_pts, pc_matched_down_pts, init_pose=init_pose, max_iterations=cfg.max_icp_iter, tolerance=cfg.icp_tolerance)
         # icp_fitness_score, loop_transform = o3d_icp(pc_current, pc_matched, tolerance=cfg.icp_tolerance, init_pose=init_pose)
+        # 下面对匹配的点云进行ICP配准
         icp_fitness_score, loop_transform = fast_gicp(pc_current, pc_matched, max_correspondence_distance=cfg.icp_max_distance, init_pose=init_pose)
         timee = time.time()
 

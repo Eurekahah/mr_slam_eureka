@@ -33,7 +33,7 @@
         "library_dirs": [
             "/usr/local/cuda-11.3/lib64"
         ],
-        "name": "voxelocc",
+        "name": "voxelfeat",
         "runtime_library_dirs": [
             "/usr/local/cuda-11.3/lib64"
         ],
@@ -42,7 +42,7 @@
             "src/manager.cu"
         ]
     },
-    "module_name": "voxelocc"
+    "module_name": "voxelfeat"
 }
 END: Cython Metadata */
 
@@ -1274,8 +1274,8 @@ static CYTHON_INLINE float __PYX_NAN() {
     #define __PYX_EXTERN_C extern "C++"
 #endif
 
-#define __PYX_HAVE__voxelocc
-#define __PYX_HAVE_API__voxelocc
+#define __PYX_HAVE__voxelfeat
+#define __PYX_HAVE_API__voxelfeat
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -1822,7 +1822,8 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 /* #### Code section: type_declarations ### */
 
 /*--- Type declarations ---*/
-struct __pyx_obj_8voxelocc_GPUTransformer;
+struct __pyx_obj_9voxelfeat_GPUTransformer;
+struct __pyx_obj_9voxelfeat_GPUFeatureExtractor;
 
 /* "../../../../../../pyvenv/mr_slam_venv/lib/python3.8/site-packages/numpy/__init__.cython-30.pxd":770
  * ctypedef npy_longdouble longdouble_t
@@ -1860,18 +1861,33 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "wrapper.pyx":13
- *         void retreive(float *point_trans)
+/* "wrapper.pyx":17
+ *         void get_features(float* feature)
  * 
  * cdef class GPUTransformer:             # <<<<<<<<<<<<<<
  *     cdef C_GPUTransformer* g
  *     cdef int size
  */
-struct __pyx_obj_8voxelocc_GPUTransformer {
+struct __pyx_obj_9voxelfeat_GPUTransformer {
   PyObject_HEAD
   GPUTransformer *g;
   int size;
   int grid_size;
+};
+
+
+/* "wrapper.pyx":42
+ * 
+ * 
+ * cdef class GPUFeatureExtractor:             # <<<<<<<<<<<<<<
+ *     cdef C_GPUFeatureExtractor* gfe
+ *     cdef int size
+ */
+struct __pyx_obj_9voxelfeat_GPUFeatureExtractor {
+  PyObject_HEAD
+  GPUFeatureExtractor *gfe;
+  int size;
+  int featmapsize;
 };
 
 /* #### Code section: utility_code_proto ### */
@@ -2665,9 +2681,6 @@ static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
-
 /* FormatTypeName.proto */
 #if CYTHON_COMPILING_IN_LIMITED_API
 typedef PyObject *__Pyx_TypeName;
@@ -2680,6 +2693,9 @@ typedef const char *__Pyx_TypeName;
 #define __Pyx_PyType_GetName(tp) ((tp)->tp_name)
 #define __Pyx_DECREF_TypeName(obj)
 #endif
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
@@ -2737,25 +2753,26 @@ static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__p
 
 /* Module declarations from "numpy" */
 
-/* Module declarations from "voxelocc" */
+/* Module declarations from "voxelfeat" */
 /* #### Code section: typeinfo ### */
 static __Pyx_TypeInfo __Pyx_TypeInfo_float = { "float", NULL, sizeof(float), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, __PYX_IS_UNSIGNED(int) ? 'U' : 'I', __PYX_IS_UNSIGNED(int), 0 };
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "voxelocc"
-extern int __pyx_module_is_main_voxelocc;
-int __pyx_module_is_main_voxelocc = 0;
+#define __Pyx_MODULE_NAME "voxelfeat"
+extern int __pyx_module_is_main_voxelfeat;
+int __pyx_module_is_main_voxelfeat = 0;
 
-/* Implementation of "voxelocc" */
+/* Implementation of "voxelfeat" */
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_AssertionError;
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_ImportError;
 /* #### Code section: string_decls ### */
+static const char __pyx_k_k[] = "k";
 static const char __pyx_k__3[] = "*";
 static const char __pyx_k_gc[] = "gc";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k__11[] = "?";
+static const char __pyx_k__15[] = "?";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_self[] = "self";
@@ -2769,29 +2786,30 @@ static const char __pyx_k_num_y[] = "num_y";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_point[] = "point";
 static const char __pyx_k_zeros[] = "zeros";
+static const char __pyx_k_eigens[] = "eigens";
 static const char __pyx_k_enable[] = "enable";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_disable[] = "disable";
+static const char __pyx_k_feature[] = "feature";
 static const char __pyx_k_float32[] = "float32";
+static const char __pyx_k_featsize[] = "featsize";
 static const char __pyx_k_getstate[] = "__getstate__";
-static const char __pyx_k_grid_out[] = "grid_out";
-static const char __pyx_k_mask_out[] = "mask_out";
 static const char __pyx_k_retreive[] = "retreive";
 static const char __pyx_k_setstate[] = "__setstate__";
-static const char __pyx_k_voxelocc[] = "voxelocc";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_isenabled[] = "isenabled";
 static const char __pyx_k_point_out[] = "point_out";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_transform[] = "transform";
+static const char __pyx_k_voxelfeat[] = "voxelfeat";
 static const char __pyx_k_max_height[] = "max_height";
 static const char __pyx_k_max_length[] = "max_length";
 static const char __pyx_k_num_height[] = "num_height";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_wrapper_pyx[] = "wrapper.pyx";
-static const char __pyx_k_enough_large[] = "enough_large";
+static const char __pyx_k_get_features[] = "get_features";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_stringsource[] = "<stringsource>";
@@ -2799,22 +2817,32 @@ static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_AssertionError[] = "AssertionError";
 static const char __pyx_k_GPUTransformer[] = "GPUTransformer";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
+static const char __pyx_k_neighbors_indices[] = "neighbors_indices";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_GPUFeatureExtractor[] = "GPUFeatureExtractor";
 static const char __pyx_k_GPUTransformer_retreive[] = "GPUTransformer.retreive";
 static const char __pyx_k_GPUTransformer_transform[] = "GPUTransformer.transform";
 static const char __pyx_k_GPUTransformer___reduce_cython[] = "GPUTransformer.__reduce_cython__";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
+static const char __pyx_k_GPUFeatureExtractor___reduce_cyt[] = "GPUFeatureExtractor.__reduce_cython__";
+static const char __pyx_k_GPUFeatureExtractor___setstate_c[] = "GPUFeatureExtractor.__setstate_cython__";
+static const char __pyx_k_GPUFeatureExtractor_get_features[] = "GPUFeatureExtractor.get_features";
 static const char __pyx_k_GPUTransformer___setstate_cython[] = "GPUTransformer.__setstate_cython__";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
 /* #### Code section: decls ### */
-static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_max_height, int __pyx_v_num_x, int __pyx_v_num_y, int __pyx_v_num_height, int __pyx_v_enough_large); /* proto */
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_2transform(struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_4retreive(struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_8voxelocc_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static int __pyx_pf_9voxelfeat_14GPUTransformer___cinit__(struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_max_height, int __pyx_v_num_x, int __pyx_v_num_y, int __pyx_v_num_height, int __pyx_v_featsize); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_2transform(struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_4retreive(struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_9voxelfeat_19GPUFeatureExtractor___cinit__(struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_featsize, int __pyx_v_k, PyArrayObject *__pyx_v_neighbors_indices, PyArrayObject *__pyx_v_eigens); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_19GPUFeatureExtractor_2get_features(struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_19GPUFeatureExtractor_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9voxelfeat_19GPUFeatureExtractor_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_9voxelfeat_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_9voxelfeat_GPUFeatureExtractor(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 typedef struct {
@@ -2879,10 +2907,16 @@ typedef struct {
   PyTypeObject *__pyx_ptype_5numpy_character;
   PyTypeObject *__pyx_ptype_5numpy_ufunc;
   #if CYTHON_USE_MODULE_STATE
-  PyObject *__pyx_type_8voxelocc_GPUTransformer;
+  PyObject *__pyx_type_9voxelfeat_GPUTransformer;
+  PyObject *__pyx_type_9voxelfeat_GPUFeatureExtractor;
   #endif
-  PyTypeObject *__pyx_ptype_8voxelocc_GPUTransformer;
+  PyTypeObject *__pyx_ptype_9voxelfeat_GPUTransformer;
+  PyTypeObject *__pyx_ptype_9voxelfeat_GPUFeatureExtractor;
   PyObject *__pyx_n_s_AssertionError;
+  PyObject *__pyx_n_s_GPUFeatureExtractor;
+  PyObject *__pyx_n_s_GPUFeatureExtractor___reduce_cyt;
+  PyObject *__pyx_n_s_GPUFeatureExtractor___setstate_c;
+  PyObject *__pyx_n_s_GPUFeatureExtractor_get_features;
   PyObject *__pyx_n_s_GPUTransformer;
   PyObject *__pyx_n_s_GPUTransformer___reduce_cython;
   PyObject *__pyx_n_s_GPUTransformer___setstate_cython;
@@ -2890,28 +2924,31 @@ typedef struct {
   PyObject *__pyx_n_s_GPUTransformer_transform;
   PyObject *__pyx_n_s_ImportError;
   PyObject *__pyx_n_s_TypeError;
-  PyObject *__pyx_n_s__11;
+  PyObject *__pyx_n_s__15;
   PyObject *__pyx_n_s__3;
   PyObject *__pyx_n_s_asyncio_coroutines;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_kp_u_disable;
   PyObject *__pyx_n_s_dtype;
+  PyObject *__pyx_n_s_eigens;
   PyObject *__pyx_kp_u_enable;
-  PyObject *__pyx_n_s_enough_large;
+  PyObject *__pyx_n_s_featsize;
+  PyObject *__pyx_n_s_feature;
   PyObject *__pyx_n_s_float32;
   PyObject *__pyx_kp_u_gc;
+  PyObject *__pyx_n_s_get_features;
   PyObject *__pyx_n_s_getstate;
-  PyObject *__pyx_n_s_grid_out;
   PyObject *__pyx_n_s_import;
   PyObject *__pyx_n_s_initializing;
   PyObject *__pyx_n_s_int32;
   PyObject *__pyx_n_s_is_coroutine;
   PyObject *__pyx_kp_u_isenabled;
+  PyObject *__pyx_n_s_k;
   PyObject *__pyx_n_s_main;
-  PyObject *__pyx_n_s_mask_out;
   PyObject *__pyx_n_s_max_height;
   PyObject *__pyx_n_s_max_length;
   PyObject *__pyx_n_s_name;
+  PyObject *__pyx_n_s_neighbors_indices;
   PyObject *__pyx_kp_s_no_default___reduce___due_to_non;
   PyObject *__pyx_n_s_np;
   PyObject *__pyx_n_s_num_height;
@@ -2935,7 +2972,7 @@ typedef struct {
   PyObject *__pyx_kp_s_stringsource;
   PyObject *__pyx_n_s_test;
   PyObject *__pyx_n_s_transform;
-  PyObject *__pyx_n_s_voxelocc;
+  PyObject *__pyx_n_s_voxelfeat;
   PyObject *__pyx_kp_s_wrapper_pyx;
   PyObject *__pyx_n_s_zeros;
   PyObject *__pyx_tuple_;
@@ -2943,10 +2980,14 @@ typedef struct {
   PyObject *__pyx_tuple__4;
   PyObject *__pyx_tuple__6;
   PyObject *__pyx_tuple__9;
+  PyObject *__pyx_tuple__11;
   PyObject *__pyx_codeobj__5;
   PyObject *__pyx_codeobj__7;
   PyObject *__pyx_codeobj__8;
   PyObject *__pyx_codeobj__10;
+  PyObject *__pyx_codeobj__12;
+  PyObject *__pyx_codeobj__13;
+  PyObject *__pyx_codeobj__14;
 } __pyx_mstate;
 
 #if CYTHON_USE_MODULE_STATE
@@ -3005,9 +3046,15 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_flexible);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_character);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_ufunc);
-  Py_CLEAR(clear_module_state->__pyx_ptype_8voxelocc_GPUTransformer);
-  Py_CLEAR(clear_module_state->__pyx_type_8voxelocc_GPUTransformer);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9voxelfeat_GPUTransformer);
+  Py_CLEAR(clear_module_state->__pyx_type_9voxelfeat_GPUTransformer);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9voxelfeat_GPUFeatureExtractor);
+  Py_CLEAR(clear_module_state->__pyx_type_9voxelfeat_GPUFeatureExtractor);
   Py_CLEAR(clear_module_state->__pyx_n_s_AssertionError);
+  Py_CLEAR(clear_module_state->__pyx_n_s_GPUFeatureExtractor);
+  Py_CLEAR(clear_module_state->__pyx_n_s_GPUFeatureExtractor___reduce_cyt);
+  Py_CLEAR(clear_module_state->__pyx_n_s_GPUFeatureExtractor___setstate_c);
+  Py_CLEAR(clear_module_state->__pyx_n_s_GPUFeatureExtractor_get_features);
   Py_CLEAR(clear_module_state->__pyx_n_s_GPUTransformer);
   Py_CLEAR(clear_module_state->__pyx_n_s_GPUTransformer___reduce_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_GPUTransformer___setstate_cython);
@@ -3015,28 +3062,31 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_GPUTransformer_transform);
   Py_CLEAR(clear_module_state->__pyx_n_s_ImportError);
   Py_CLEAR(clear_module_state->__pyx_n_s_TypeError);
-  Py_CLEAR(clear_module_state->__pyx_n_s__11);
+  Py_CLEAR(clear_module_state->__pyx_n_s__15);
   Py_CLEAR(clear_module_state->__pyx_n_s__3);
   Py_CLEAR(clear_module_state->__pyx_n_s_asyncio_coroutines);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_kp_u_disable);
   Py_CLEAR(clear_module_state->__pyx_n_s_dtype);
+  Py_CLEAR(clear_module_state->__pyx_n_s_eigens);
   Py_CLEAR(clear_module_state->__pyx_kp_u_enable);
-  Py_CLEAR(clear_module_state->__pyx_n_s_enough_large);
+  Py_CLEAR(clear_module_state->__pyx_n_s_featsize);
+  Py_CLEAR(clear_module_state->__pyx_n_s_feature);
   Py_CLEAR(clear_module_state->__pyx_n_s_float32);
   Py_CLEAR(clear_module_state->__pyx_kp_u_gc);
+  Py_CLEAR(clear_module_state->__pyx_n_s_get_features);
   Py_CLEAR(clear_module_state->__pyx_n_s_getstate);
-  Py_CLEAR(clear_module_state->__pyx_n_s_grid_out);
   Py_CLEAR(clear_module_state->__pyx_n_s_import);
   Py_CLEAR(clear_module_state->__pyx_n_s_initializing);
   Py_CLEAR(clear_module_state->__pyx_n_s_int32);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_coroutine);
   Py_CLEAR(clear_module_state->__pyx_kp_u_isenabled);
+  Py_CLEAR(clear_module_state->__pyx_n_s_k);
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
-  Py_CLEAR(clear_module_state->__pyx_n_s_mask_out);
   Py_CLEAR(clear_module_state->__pyx_n_s_max_height);
   Py_CLEAR(clear_module_state->__pyx_n_s_max_length);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
+  Py_CLEAR(clear_module_state->__pyx_n_s_neighbors_indices);
   Py_CLEAR(clear_module_state->__pyx_kp_s_no_default___reduce___due_to_non);
   Py_CLEAR(clear_module_state->__pyx_n_s_np);
   Py_CLEAR(clear_module_state->__pyx_n_s_num_height);
@@ -3060,7 +3110,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_stringsource);
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
   Py_CLEAR(clear_module_state->__pyx_n_s_transform);
-  Py_CLEAR(clear_module_state->__pyx_n_s_voxelocc);
+  Py_CLEAR(clear_module_state->__pyx_n_s_voxelfeat);
   Py_CLEAR(clear_module_state->__pyx_kp_s_wrapper_pyx);
   Py_CLEAR(clear_module_state->__pyx_n_s_zeros);
   Py_CLEAR(clear_module_state->__pyx_tuple_);
@@ -3068,10 +3118,14 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__4);
   Py_CLEAR(clear_module_state->__pyx_tuple__6);
   Py_CLEAR(clear_module_state->__pyx_tuple__9);
+  Py_CLEAR(clear_module_state->__pyx_tuple__11);
   Py_CLEAR(clear_module_state->__pyx_codeobj__5);
   Py_CLEAR(clear_module_state->__pyx_codeobj__7);
   Py_CLEAR(clear_module_state->__pyx_codeobj__8);
   Py_CLEAR(clear_module_state->__pyx_codeobj__10);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__12);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__13);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__14);
   return 0;
 }
 #endif
@@ -3108,9 +3162,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_flexible);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_character);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_ufunc);
-  Py_VISIT(traverse_module_state->__pyx_ptype_8voxelocc_GPUTransformer);
-  Py_VISIT(traverse_module_state->__pyx_type_8voxelocc_GPUTransformer);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9voxelfeat_GPUTransformer);
+  Py_VISIT(traverse_module_state->__pyx_type_9voxelfeat_GPUTransformer);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9voxelfeat_GPUFeatureExtractor);
+  Py_VISIT(traverse_module_state->__pyx_type_9voxelfeat_GPUFeatureExtractor);
   Py_VISIT(traverse_module_state->__pyx_n_s_AssertionError);
+  Py_VISIT(traverse_module_state->__pyx_n_s_GPUFeatureExtractor);
+  Py_VISIT(traverse_module_state->__pyx_n_s_GPUFeatureExtractor___reduce_cyt);
+  Py_VISIT(traverse_module_state->__pyx_n_s_GPUFeatureExtractor___setstate_c);
+  Py_VISIT(traverse_module_state->__pyx_n_s_GPUFeatureExtractor_get_features);
   Py_VISIT(traverse_module_state->__pyx_n_s_GPUTransformer);
   Py_VISIT(traverse_module_state->__pyx_n_s_GPUTransformer___reduce_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_GPUTransformer___setstate_cython);
@@ -3118,28 +3178,31 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_GPUTransformer_transform);
   Py_VISIT(traverse_module_state->__pyx_n_s_ImportError);
   Py_VISIT(traverse_module_state->__pyx_n_s_TypeError);
-  Py_VISIT(traverse_module_state->__pyx_n_s__11);
+  Py_VISIT(traverse_module_state->__pyx_n_s__15);
   Py_VISIT(traverse_module_state->__pyx_n_s__3);
   Py_VISIT(traverse_module_state->__pyx_n_s_asyncio_coroutines);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_kp_u_disable);
   Py_VISIT(traverse_module_state->__pyx_n_s_dtype);
+  Py_VISIT(traverse_module_state->__pyx_n_s_eigens);
   Py_VISIT(traverse_module_state->__pyx_kp_u_enable);
-  Py_VISIT(traverse_module_state->__pyx_n_s_enough_large);
+  Py_VISIT(traverse_module_state->__pyx_n_s_featsize);
+  Py_VISIT(traverse_module_state->__pyx_n_s_feature);
   Py_VISIT(traverse_module_state->__pyx_n_s_float32);
   Py_VISIT(traverse_module_state->__pyx_kp_u_gc);
+  Py_VISIT(traverse_module_state->__pyx_n_s_get_features);
   Py_VISIT(traverse_module_state->__pyx_n_s_getstate);
-  Py_VISIT(traverse_module_state->__pyx_n_s_grid_out);
   Py_VISIT(traverse_module_state->__pyx_n_s_import);
   Py_VISIT(traverse_module_state->__pyx_n_s_initializing);
   Py_VISIT(traverse_module_state->__pyx_n_s_int32);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_coroutine);
   Py_VISIT(traverse_module_state->__pyx_kp_u_isenabled);
+  Py_VISIT(traverse_module_state->__pyx_n_s_k);
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
-  Py_VISIT(traverse_module_state->__pyx_n_s_mask_out);
   Py_VISIT(traverse_module_state->__pyx_n_s_max_height);
   Py_VISIT(traverse_module_state->__pyx_n_s_max_length);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
+  Py_VISIT(traverse_module_state->__pyx_n_s_neighbors_indices);
   Py_VISIT(traverse_module_state->__pyx_kp_s_no_default___reduce___due_to_non);
   Py_VISIT(traverse_module_state->__pyx_n_s_np);
   Py_VISIT(traverse_module_state->__pyx_n_s_num_height);
@@ -3163,7 +3226,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_stringsource);
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
   Py_VISIT(traverse_module_state->__pyx_n_s_transform);
-  Py_VISIT(traverse_module_state->__pyx_n_s_voxelocc);
+  Py_VISIT(traverse_module_state->__pyx_n_s_voxelfeat);
   Py_VISIT(traverse_module_state->__pyx_kp_s_wrapper_pyx);
   Py_VISIT(traverse_module_state->__pyx_n_s_zeros);
   Py_VISIT(traverse_module_state->__pyx_tuple_);
@@ -3171,10 +3234,14 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__4);
   Py_VISIT(traverse_module_state->__pyx_tuple__6);
   Py_VISIT(traverse_module_state->__pyx_tuple__9);
+  Py_VISIT(traverse_module_state->__pyx_tuple__11);
   Py_VISIT(traverse_module_state->__pyx_codeobj__5);
   Py_VISIT(traverse_module_state->__pyx_codeobj__7);
   Py_VISIT(traverse_module_state->__pyx_codeobj__8);
   Py_VISIT(traverse_module_state->__pyx_codeobj__10);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__12);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__13);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__14);
   return 0;
 }
 #endif
@@ -3240,10 +3307,16 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_ptype_5numpy_character __pyx_mstate_global->__pyx_ptype_5numpy_character
 #define __pyx_ptype_5numpy_ufunc __pyx_mstate_global->__pyx_ptype_5numpy_ufunc
 #if CYTHON_USE_MODULE_STATE
-#define __pyx_type_8voxelocc_GPUTransformer __pyx_mstate_global->__pyx_type_8voxelocc_GPUTransformer
+#define __pyx_type_9voxelfeat_GPUTransformer __pyx_mstate_global->__pyx_type_9voxelfeat_GPUTransformer
+#define __pyx_type_9voxelfeat_GPUFeatureExtractor __pyx_mstate_global->__pyx_type_9voxelfeat_GPUFeatureExtractor
 #endif
-#define __pyx_ptype_8voxelocc_GPUTransformer __pyx_mstate_global->__pyx_ptype_8voxelocc_GPUTransformer
+#define __pyx_ptype_9voxelfeat_GPUTransformer __pyx_mstate_global->__pyx_ptype_9voxelfeat_GPUTransformer
+#define __pyx_ptype_9voxelfeat_GPUFeatureExtractor __pyx_mstate_global->__pyx_ptype_9voxelfeat_GPUFeatureExtractor
 #define __pyx_n_s_AssertionError __pyx_mstate_global->__pyx_n_s_AssertionError
+#define __pyx_n_s_GPUFeatureExtractor __pyx_mstate_global->__pyx_n_s_GPUFeatureExtractor
+#define __pyx_n_s_GPUFeatureExtractor___reduce_cyt __pyx_mstate_global->__pyx_n_s_GPUFeatureExtractor___reduce_cyt
+#define __pyx_n_s_GPUFeatureExtractor___setstate_c __pyx_mstate_global->__pyx_n_s_GPUFeatureExtractor___setstate_c
+#define __pyx_n_s_GPUFeatureExtractor_get_features __pyx_mstate_global->__pyx_n_s_GPUFeatureExtractor_get_features
 #define __pyx_n_s_GPUTransformer __pyx_mstate_global->__pyx_n_s_GPUTransformer
 #define __pyx_n_s_GPUTransformer___reduce_cython __pyx_mstate_global->__pyx_n_s_GPUTransformer___reduce_cython
 #define __pyx_n_s_GPUTransformer___setstate_cython __pyx_mstate_global->__pyx_n_s_GPUTransformer___setstate_cython
@@ -3251,28 +3324,31 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_GPUTransformer_transform __pyx_mstate_global->__pyx_n_s_GPUTransformer_transform
 #define __pyx_n_s_ImportError __pyx_mstate_global->__pyx_n_s_ImportError
 #define __pyx_n_s_TypeError __pyx_mstate_global->__pyx_n_s_TypeError
-#define __pyx_n_s__11 __pyx_mstate_global->__pyx_n_s__11
+#define __pyx_n_s__15 __pyx_mstate_global->__pyx_n_s__15
 #define __pyx_n_s__3 __pyx_mstate_global->__pyx_n_s__3
 #define __pyx_n_s_asyncio_coroutines __pyx_mstate_global->__pyx_n_s_asyncio_coroutines
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_kp_u_disable __pyx_mstate_global->__pyx_kp_u_disable
 #define __pyx_n_s_dtype __pyx_mstate_global->__pyx_n_s_dtype
+#define __pyx_n_s_eigens __pyx_mstate_global->__pyx_n_s_eigens
 #define __pyx_kp_u_enable __pyx_mstate_global->__pyx_kp_u_enable
-#define __pyx_n_s_enough_large __pyx_mstate_global->__pyx_n_s_enough_large
+#define __pyx_n_s_featsize __pyx_mstate_global->__pyx_n_s_featsize
+#define __pyx_n_s_feature __pyx_mstate_global->__pyx_n_s_feature
 #define __pyx_n_s_float32 __pyx_mstate_global->__pyx_n_s_float32
 #define __pyx_kp_u_gc __pyx_mstate_global->__pyx_kp_u_gc
+#define __pyx_n_s_get_features __pyx_mstate_global->__pyx_n_s_get_features
 #define __pyx_n_s_getstate __pyx_mstate_global->__pyx_n_s_getstate
-#define __pyx_n_s_grid_out __pyx_mstate_global->__pyx_n_s_grid_out
 #define __pyx_n_s_import __pyx_mstate_global->__pyx_n_s_import
 #define __pyx_n_s_initializing __pyx_mstate_global->__pyx_n_s_initializing
 #define __pyx_n_s_int32 __pyx_mstate_global->__pyx_n_s_int32
 #define __pyx_n_s_is_coroutine __pyx_mstate_global->__pyx_n_s_is_coroutine
 #define __pyx_kp_u_isenabled __pyx_mstate_global->__pyx_kp_u_isenabled
+#define __pyx_n_s_k __pyx_mstate_global->__pyx_n_s_k
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
-#define __pyx_n_s_mask_out __pyx_mstate_global->__pyx_n_s_mask_out
 #define __pyx_n_s_max_height __pyx_mstate_global->__pyx_n_s_max_height
 #define __pyx_n_s_max_length __pyx_mstate_global->__pyx_n_s_max_length
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
+#define __pyx_n_s_neighbors_indices __pyx_mstate_global->__pyx_n_s_neighbors_indices
 #define __pyx_kp_s_no_default___reduce___due_to_non __pyx_mstate_global->__pyx_kp_s_no_default___reduce___due_to_non
 #define __pyx_n_s_np __pyx_mstate_global->__pyx_n_s_np
 #define __pyx_n_s_num_height __pyx_mstate_global->__pyx_n_s_num_height
@@ -3296,7 +3372,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_stringsource __pyx_mstate_global->__pyx_kp_s_stringsource
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
 #define __pyx_n_s_transform __pyx_mstate_global->__pyx_n_s_transform
-#define __pyx_n_s_voxelocc __pyx_mstate_global->__pyx_n_s_voxelocc
+#define __pyx_n_s_voxelfeat __pyx_mstate_global->__pyx_n_s_voxelfeat
 #define __pyx_kp_s_wrapper_pyx __pyx_mstate_global->__pyx_kp_s_wrapper_pyx
 #define __pyx_n_s_zeros __pyx_mstate_global->__pyx_n_s_zeros
 #define __pyx_tuple_ __pyx_mstate_global->__pyx_tuple_
@@ -3304,10 +3380,14 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__4 __pyx_mstate_global->__pyx_tuple__4
 #define __pyx_tuple__6 __pyx_mstate_global->__pyx_tuple__6
 #define __pyx_tuple__9 __pyx_mstate_global->__pyx_tuple__9
+#define __pyx_tuple__11 __pyx_mstate_global->__pyx_tuple__11
 #define __pyx_codeobj__5 __pyx_mstate_global->__pyx_codeobj__5
 #define __pyx_codeobj__7 __pyx_mstate_global->__pyx_codeobj__7
 #define __pyx_codeobj__8 __pyx_mstate_global->__pyx_codeobj__8
 #define __pyx_codeobj__10 __pyx_mstate_global->__pyx_codeobj__10
+#define __pyx_codeobj__12 __pyx_mstate_global->__pyx_codeobj__12
+#define __pyx_codeobj__13 __pyx_mstate_global->__pyx_codeobj__13
+#define __pyx_codeobj__14 __pyx_mstate_global->__pyx_codeobj__14
 /* #### Code section: module_code ### */
 
 /* "../../../../../../pyvenv/mr_slam_venv/lib/python3.8/site-packages/numpy/__init__.cython-30.pxd":245
@@ -4564,17 +4644,17 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "wrapper.pyx":18
+/* "wrapper.pyx":22
  *     cdef int grid_size
  * 
  *     def __cinit__(self, np.ndarray[float, ndim=1, mode = "c"] point not None,             # <<<<<<<<<<<<<<
- *                     int size, int max_length, int max_height, int num_x, int num_y, int num_height, int enough_large):
+ *                     int size, int max_length, int max_height, int num_x, int num_y, int num_height, int featsize):
  * 
  */
 
 /* Python wrapper */
-static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_9voxelfeat_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_9voxelfeat_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_point = 0;
   int __pyx_v_size;
   int __pyx_v_max_length;
@@ -4582,7 +4662,7 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
   int __pyx_v_num_x;
   int __pyx_v_num_y;
   int __pyx_v_num_height;
-  int __pyx_v_enough_large;
+  int __pyx_v_featsize;
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject* values[8] = {0,0,0,0,0,0,0,0};
@@ -4599,7 +4679,7 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
   #endif
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_point,&__pyx_n_s_size,&__pyx_n_s_max_length,&__pyx_n_s_max_height,&__pyx_n_s_num_x,&__pyx_n_s_num_y,&__pyx_n_s_num_height,&__pyx_n_s_enough_large,0};
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_point,&__pyx_n_s_size,&__pyx_n_s_max_length,&__pyx_n_s_max_height,&__pyx_n_s_num_x,&__pyx_n_s_num_y,&__pyx_n_s_num_height,&__pyx_n_s_featsize,0};
     if (__pyx_kwds) {
       Py_ssize_t kw_args;
       switch (__pyx_nargs) {
@@ -4629,7 +4709,7 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -4637,9 +4717,9 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 1); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 1); __PYX_ERR(0, 22, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -4647,9 +4727,9 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 2); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 2); __PYX_ERR(0, 22, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -4657,9 +4737,9 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[3]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 3); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 3); __PYX_ERR(0, 22, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
@@ -4667,9 +4747,9 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[4]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 4); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 4); __PYX_ERR(0, 22, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
@@ -4677,9 +4757,9 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[5]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 5); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 5); __PYX_ERR(0, 22, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
@@ -4687,24 +4767,24 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
           (void)__Pyx_Arg_NewRef_VARARGS(values[6]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 6); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 6); __PYX_ERR(0, 22, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
-        if (likely((values[7] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_enough_large)) != 0)) {
+        if (likely((values[7] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_featsize)) != 0)) {
           (void)__Pyx_Arg_NewRef_VARARGS(values[7]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 7); __PYX_ERR(0, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 7); __PYX_ERR(0, 22, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(0, 18, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(0, 22, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 8)) {
       goto __pyx_L5_argtuple_error;
@@ -4719,17 +4799,17 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
       values[7] = __Pyx_Arg_VARARGS(__pyx_args, 7);
     }
     __pyx_v_point = ((PyArrayObject *)values[0]);
-    __pyx_v_size = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_max_length = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_max_length == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_max_height = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_max_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_num_x = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_num_x == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_num_y = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_num_y == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_num_height = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_num_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
-    __pyx_v_enough_large = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_enough_large == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L3_error)
+    __pyx_v_size = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
+    __pyx_v_max_length = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_max_length == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
+    __pyx_v_max_height = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_max_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
+    __pyx_v_num_x = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_num_x == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
+    __pyx_v_num_y = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_num_y == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
+    __pyx_v_num_height = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_num_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
+    __pyx_v_featsize = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_featsize == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, __pyx_nargs); __PYX_ERR(0, 18, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, __pyx_nargs); __PYX_ERR(0, 22, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4739,12 +4819,12 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
       __Pyx_Arg_XDECREF_VARARGS(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("voxelocc.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("voxelfeat.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_point), __pyx_ptype_5numpy_ndarray, 0, "point", 0))) __PYX_ERR(0, 18, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8voxelocc_14GPUTransformer___cinit__(((struct __pyx_obj_8voxelocc_GPUTransformer *)__pyx_v_self), __pyx_v_point, __pyx_v_size, __pyx_v_max_length, __pyx_v_max_height, __pyx_v_num_x, __pyx_v_num_y, __pyx_v_num_height, __pyx_v_enough_large);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_point), __pyx_ptype_5numpy_ndarray, 0, "point", 0))) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_r = __pyx_pf_9voxelfeat_14GPUTransformer___cinit__(((struct __pyx_obj_9voxelfeat_GPUTransformer *)__pyx_v_self), __pyx_v_point, __pyx_v_size, __pyx_v_max_length, __pyx_v_max_height, __pyx_v_num_x, __pyx_v_num_y, __pyx_v_num_height, __pyx_v_featsize);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4761,7 +4841,7 @@ static int __pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
   return __pyx_r;
 }
 
-static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_max_height, int __pyx_v_num_x, int __pyx_v_num_y, int __pyx_v_num_height, int __pyx_v_enough_large) {
+static int __pyx_pf_9voxelfeat_14GPUTransformer___cinit__(struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_max_height, int __pyx_v_num_x, int __pyx_v_num_y, int __pyx_v_num_height, int __pyx_v_featsize) {
   PyArrayObject *__pyx_v_y = 0;
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_height = 0;
@@ -4810,68 +4890,68 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   __pyx_pybuffernd_point.rcbuffer = &__pyx_pybuffer_point;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_point.rcbuffer->pybuffer, (PyObject*)__pyx_v_point, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 18, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_point.rcbuffer->pybuffer, (PyObject*)__pyx_v_point, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 22, __pyx_L1_error)
   }
   __pyx_pybuffernd_point.diminfo[0].strides = __pyx_pybuffernd_point.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_point.diminfo[0].shape = __pyx_pybuffernd_point.rcbuffer->pybuffer.shape[0];
 
-  /* "wrapper.pyx":21
- *                     int size, int max_length, int max_height, int num_x, int num_y, int num_height, int enough_large):
+  /* "wrapper.pyx":25
+ *                     int size, int max_length, int max_height, int num_x, int num_y, int num_height, int featsize):
  * 
  *         self.size = size             # <<<<<<<<<<<<<<
- *         self.grid_size = num_x * num_y * num_height * enough_large
+ *         self.grid_size = num_x * num_y * num_height * featsize
  *         cdef np.ndarray[int, ndim=1, mode = "c"] y = np.zeros(self.size, dtype=np.int32)
  */
   __pyx_v_self->size = __pyx_v_size;
 
-  /* "wrapper.pyx":22
+  /* "wrapper.pyx":26
  * 
  *         self.size = size
- *         self.grid_size = num_x * num_y * num_height * enough_large             # <<<<<<<<<<<<<<
+ *         self.grid_size = num_x * num_y * num_height * featsize             # <<<<<<<<<<<<<<
  *         cdef np.ndarray[int, ndim=1, mode = "c"] y = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] x = np.zeros(self.size, dtype=np.int32)
  */
-  __pyx_v_self->grid_size = (((__pyx_v_num_x * __pyx_v_num_y) * __pyx_v_num_height) * __pyx_v_enough_large);
+  __pyx_v_self->grid_size = (((__pyx_v_num_x * __pyx_v_num_y) * __pyx_v_num_height) * __pyx_v_featsize);
 
-  /* "wrapper.pyx":23
+  /* "wrapper.pyx":27
  *         self.size = size
- *         self.grid_size = num_x * num_y * num_height * enough_large
+ *         self.grid_size = num_x * num_y * num_height * featsize
  *         cdef np.ndarray[int, ndim=1, mode = "c"] y = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
  *         cdef np.ndarray[int, ndim=1, mode = "c"] x = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] height = np.zeros(self.size, dtype=np.int32)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 23, __pyx_L1_error)
+  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 27, __pyx_L1_error)
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_y.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_y = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_y.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(0, 23, __pyx_L1_error)
+      __PYX_ERR(0, 27, __pyx_L1_error)
     } else {__pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -4879,46 +4959,46 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   __pyx_v_y = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "wrapper.pyx":24
- *         self.grid_size = num_x * num_y * num_height * enough_large
+  /* "wrapper.pyx":28
+ *         self.grid_size = num_x * num_y * num_height * featsize
  *         cdef np.ndarray[int, ndim=1, mode = "c"] y = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] x = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
  *         cdef np.ndarray[int, ndim=1, mode = "c"] height = np.zeros(self.size, dtype=np.int32)
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5)) __PYX_ERR(0, 24, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5)) __PYX_ERR(0, 28, __pyx_L1_error);
   __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 24, __pyx_L1_error)
+  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 28, __pyx_L1_error)
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_x.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_x = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_x.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(0, 24, __pyx_L1_error)
+      __PYX_ERR(0, 28, __pyx_L1_error)
     } else {__pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -4926,46 +5006,46 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   __pyx_v_x = ((PyArrayObject *)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "wrapper.pyx":25
+  /* "wrapper.pyx":29
  *         cdef np.ndarray[int, ndim=1, mode = "c"] y = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] x = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] height = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
  * 
- *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, enough_large)
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, featsize)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_int32); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_int32); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 29, __pyx_L1_error)
   __pyx_t_8 = ((PyArrayObject *)__pyx_t_2);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_height.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_height = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_height.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(0, 25, __pyx_L1_error)
+      __PYX_ERR(0, 29, __pyx_L1_error)
     } else {__pyx_pybuffernd_height.diminfo[0].strides = __pyx_pybuffernd_height.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_height.diminfo[0].shape = __pyx_pybuffernd_height.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -4973,10 +5053,10 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   __pyx_v_height = ((PyArrayObject *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "wrapper.pyx":27
+  /* "wrapper.pyx":31
  *         cdef np.ndarray[int, ndim=1, mode = "c"] height = np.zeros(self.size, dtype=np.int32)
  * 
- *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, enough_large)             # <<<<<<<<<<<<<<
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, featsize)             # <<<<<<<<<<<<<<
  * 
  *     def transform(self):
  */
@@ -4988,7 +5068,7 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   } else if (unlikely(__pyx_t_9 >= __pyx_pybuffernd_point.diminfo[0].shape)) __pyx_t_10 = 0;
   if (unlikely(__pyx_t_10 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_10);
-    __PYX_ERR(0, 27, __pyx_L1_error)
+    __PYX_ERR(0, 31, __pyx_L1_error)
   }
   __pyx_t_11 = 0;
   __pyx_t_10 = -1;
@@ -4998,7 +5078,7 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   } else if (unlikely(__pyx_t_11 >= __pyx_pybuffernd_x.diminfo[0].shape)) __pyx_t_10 = 0;
   if (unlikely(__pyx_t_10 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_10);
-    __PYX_ERR(0, 27, __pyx_L1_error)
+    __PYX_ERR(0, 31, __pyx_L1_error)
   }
   __pyx_t_12 = 0;
   __pyx_t_10 = -1;
@@ -5008,7 +5088,7 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   } else if (unlikely(__pyx_t_12 >= __pyx_pybuffernd_y.diminfo[0].shape)) __pyx_t_10 = 0;
   if (unlikely(__pyx_t_10 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_10);
-    __PYX_ERR(0, 27, __pyx_L1_error)
+    __PYX_ERR(0, 31, __pyx_L1_error)
   }
   __pyx_t_13 = 0;
   __pyx_t_10 = -1;
@@ -5018,15 +5098,15 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_height.diminfo[0].shape)) __pyx_t_10 = 0;
   if (unlikely(__pyx_t_10 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_10);
-    __PYX_ERR(0, 27, __pyx_L1_error)
+    __PYX_ERR(0, 31, __pyx_L1_error)
   }
-  __pyx_v_self->g = new GPUTransformer((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_point.diminfo[0].strides))), __pyx_v_self->size, (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_x.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_y.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_y.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_height.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_height.diminfo[0].strides))), __pyx_v_max_length, __pyx_v_max_height, __pyx_v_num_x, __pyx_v_num_y, __pyx_v_num_height, __pyx_v_enough_large);
+  __pyx_v_self->g = new GPUTransformer((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_point.diminfo[0].strides))), __pyx_v_self->size, (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_x.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_y.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_y.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_height.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_height.diminfo[0].strides))), __pyx_v_max_length, __pyx_v_max_height, __pyx_v_num_x, __pyx_v_num_y, __pyx_v_num_height, __pyx_v_featsize);
 
-  /* "wrapper.pyx":18
+  /* "wrapper.pyx":22
  *     cdef int grid_size
  * 
  *     def __cinit__(self, np.ndarray[float, ndim=1, mode = "c"] point not None,             # <<<<<<<<<<<<<<
- *                     int size, int max_length, int max_height, int num_x, int num_y, int num_height, int enough_large):
+ *                     int size, int max_length, int max_height, int num_x, int num_y, int num_height, int featsize):
  * 
  */
 
@@ -5048,7 +5128,7 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("voxelocc.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("voxelfeat.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5064,8 +5144,8 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
   return __pyx_r;
 }
 
-/* "wrapper.pyx":29
- *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, enough_large)
+/* "wrapper.pyx":33
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, featsize)
  * 
  *     def transform(self):             # <<<<<<<<<<<<<<
  *         self.g.transform()
@@ -5073,15 +5153,15 @@ static int __pyx_pf_8voxelocc_14GPUTransformer___cinit__(struct __pyx_obj_8voxel
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_3transform(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_3transform(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_8voxelocc_14GPUTransformer_3transform = {"transform", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_3transform, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_3transform(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9voxelfeat_14GPUTransformer_3transform = {"transform", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_3transform, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_3transform(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5106,19 +5186,19 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("transform", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "transform", 0))) return NULL;
-  __pyx_r = __pyx_pf_8voxelocc_14GPUTransformer_2transform(((struct __pyx_obj_8voxelocc_GPUTransformer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_9voxelfeat_14GPUTransformer_2transform(((struct __pyx_obj_9voxelfeat_GPUTransformer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_2transform(struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self) {
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_2transform(struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("transform", 1);
 
-  /* "wrapper.pyx":30
+  /* "wrapper.pyx":34
  * 
  *     def transform(self):
  *         self.g.transform()             # <<<<<<<<<<<<<<
@@ -5127,8 +5207,8 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_2transform(struct __pyx_obj
  */
   __pyx_v_self->g->transform();
 
-  /* "wrapper.pyx":29
- *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, enough_large)
+  /* "wrapper.pyx":33
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, featsize)
  * 
  *     def transform(self):             # <<<<<<<<<<<<<<
  *         self.g.transform()
@@ -5142,24 +5222,24 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_2transform(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "wrapper.pyx":32
+/* "wrapper.pyx":36
  *         self.g.transform()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)
+ *         self.g.retreive(&point_out[0])
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_5retreive(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_5retreive(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_8voxelocc_14GPUTransformer_5retreive = {"retreive", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_5retreive, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_5retreive(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9voxelfeat_14GPUTransformer_5retreive = {"retreive", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_5retreive, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_5retreive(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5184,21 +5264,15 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("retreive", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "retreive", 0))) return NULL;
-  __pyx_r = __pyx_pf_8voxelocc_14GPUTransformer_4retreive(((struct __pyx_obj_8voxelocc_GPUTransformer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_9voxelfeat_14GPUTransformer_4retreive(((struct __pyx_obj_9voxelfeat_GPUTransformer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_4retreive(struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self) {
-  CYTHON_UNUSED PyArrayObject *__pyx_v_grid_out = 0;
-  CYTHON_UNUSED PyArrayObject *__pyx_v_mask_out = 0;
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_4retreive(struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self) {
   PyArrayObject *__pyx_v_point_out = 0;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_grid_out;
-  __Pyx_Buffer __pyx_pybuffer_grid_out;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_mask_out;
-  __Pyx_Buffer __pyx_pybuffer_mask_out;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_point_out;
   __Pyx_Buffer __pyx_pybuffer_point_out;
   PyObject *__pyx_r = NULL;
@@ -5209,203 +5283,101 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_4retreive(struct __pyx_obj_
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   PyArrayObject *__pyx_t_6 = NULL;
-  PyArrayObject *__pyx_t_7 = NULL;
-  PyArrayObject *__pyx_t_8 = NULL;
-  Py_ssize_t __pyx_t_9;
-  int __pyx_t_10;
+  Py_ssize_t __pyx_t_7;
+  int __pyx_t_8;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("retreive", 1);
-  __pyx_pybuffer_grid_out.pybuffer.buf = NULL;
-  __pyx_pybuffer_grid_out.refcount = 0;
-  __pyx_pybuffernd_grid_out.data = NULL;
-  __pyx_pybuffernd_grid_out.rcbuffer = &__pyx_pybuffer_grid_out;
-  __pyx_pybuffer_mask_out.pybuffer.buf = NULL;
-  __pyx_pybuffer_mask_out.refcount = 0;
-  __pyx_pybuffernd_mask_out.data = NULL;
-  __pyx_pybuffernd_mask_out.rcbuffer = &__pyx_pybuffer_mask_out;
   __pyx_pybuffer_point_out.pybuffer.buf = NULL;
   __pyx_pybuffer_point_out.refcount = 0;
   __pyx_pybuffernd_point_out.data = NULL;
   __pyx_pybuffernd_point_out.rcbuffer = &__pyx_pybuffer_point_out;
 
-  /* "wrapper.pyx":33
+  /* "wrapper.pyx":37
  * 
  *     def retreive(self):
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size * 3, dtype=np.float32)
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)             # <<<<<<<<<<<<<<
+ *         self.g.retreive(&point_out[0])
+ *         return point_out
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->grid_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 37, __pyx_L1_error)
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_grid_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
-      __pyx_v_grid_out = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_grid_out.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(0, 33, __pyx_L1_error)
-    } else {__pyx_pybuffernd_grid_out.diminfo[0].strides = __pyx_pybuffernd_grid_out.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_grid_out.diminfo[0].shape = __pyx_pybuffernd_grid_out.rcbuffer->pybuffer.shape[0];
-    }
-  }
-  __pyx_t_6 = 0;
-  __pyx_v_grid_out = ((PyArrayObject *)__pyx_t_5);
-  __pyx_t_5 = 0;
-
-  /* "wrapper.pyx":34
- *     def retreive(self):
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
- *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size * 3, dtype=np.float32)
- * 
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->size); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5)) __PYX_ERR(0, 34, __pyx_L1_error);
-  __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 34, __pyx_L1_error)
-  __pyx_t_7 = ((PyArrayObject *)__pyx_t_4);
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mask_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
-      __pyx_v_mask_out = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_mask_out.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(0, 34, __pyx_L1_error)
-    } else {__pyx_pybuffernd_mask_out.diminfo[0].strides = __pyx_pybuffernd_mask_out.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_mask_out.diminfo[0].shape = __pyx_pybuffernd_mask_out.rcbuffer->pybuffer.shape[0];
-    }
-  }
-  __pyx_t_7 = 0;
-  __pyx_v_mask_out = ((PyArrayObject *)__pyx_t_4);
-  __pyx_t_4 = 0;
-
-  /* "wrapper.pyx":35
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size * 3, dtype=np.float32)             # <<<<<<<<<<<<<<
- * 
- *         self.g.retreive(&point_out[0])
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_long((__pyx_v_self->grid_size * 3)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_float32); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 35, __pyx_L1_error)
-  __pyx_t_8 = ((PyArrayObject *)__pyx_t_2);
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_point_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_point_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_point_out = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_point_out.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(0, 35, __pyx_L1_error)
+      __PYX_ERR(0, 37, __pyx_L1_error)
     } else {__pyx_pybuffernd_point_out.diminfo[0].strides = __pyx_pybuffernd_point_out.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_point_out.diminfo[0].shape = __pyx_pybuffernd_point_out.rcbuffer->pybuffer.shape[0];
     }
   }
-  __pyx_t_8 = 0;
-  __pyx_v_point_out = ((PyArrayObject *)__pyx_t_2);
-  __pyx_t_2 = 0;
+  __pyx_t_6 = 0;
+  __pyx_v_point_out = ((PyArrayObject *)__pyx_t_5);
+  __pyx_t_5 = 0;
 
-  /* "wrapper.pyx":37
- *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size * 3, dtype=np.float32)
- * 
+  /* "wrapper.pyx":38
+ *     def retreive(self):
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)
  *         self.g.retreive(&point_out[0])             # <<<<<<<<<<<<<<
- * 
  *         return point_out
+ * 
  */
-  __pyx_t_9 = 0;
-  __pyx_t_10 = -1;
-  if (__pyx_t_9 < 0) {
-    __pyx_t_9 += __pyx_pybuffernd_point_out.diminfo[0].shape;
-    if (unlikely(__pyx_t_9 < 0)) __pyx_t_10 = 0;
-  } else if (unlikely(__pyx_t_9 >= __pyx_pybuffernd_point_out.diminfo[0].shape)) __pyx_t_10 = 0;
-  if (unlikely(__pyx_t_10 != -1)) {
-    __Pyx_RaiseBufferIndexError(__pyx_t_10);
-    __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_7 = 0;
+  __pyx_t_8 = -1;
+  if (__pyx_t_7 < 0) {
+    __pyx_t_7 += __pyx_pybuffernd_point_out.diminfo[0].shape;
+    if (unlikely(__pyx_t_7 < 0)) __pyx_t_8 = 0;
+  } else if (unlikely(__pyx_t_7 >= __pyx_pybuffernd_point_out.diminfo[0].shape)) __pyx_t_8 = 0;
+  if (unlikely(__pyx_t_8 != -1)) {
+    __Pyx_RaiseBufferIndexError(__pyx_t_8);
+    __PYX_ERR(0, 38, __pyx_L1_error)
   }
-  __pyx_v_self->g->retreive((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point_out.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_point_out.diminfo[0].strides))));
+  __pyx_v_self->g->retreive((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point_out.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_point_out.diminfo[0].strides))));
 
   /* "wrapper.pyx":39
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)
  *         self.g.retreive(&point_out[0])
- * 
  *         return point_out             # <<<<<<<<<<<<<<
+ * 
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF((PyObject *)__pyx_v_point_out);
   __pyx_r = ((PyObject *)__pyx_v_point_out);
   goto __pyx_L0;
 
-  /* "wrapper.pyx":32
+  /* "wrapper.pyx":36
  *         self.g.transform()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)
+ *         self.g.retreive(&point_out[0])
  */
 
   /* function exit code */
@@ -5419,20 +5391,14 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_4retreive(struct __pyx_obj_
     __Pyx_PyThreadState_declare
     __Pyx_PyThreadState_assign
     __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_grid_out.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_mask_out.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_point_out.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("voxelocc.GPUTransformer.retreive", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("voxelfeat.GPUTransformer.retreive", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_grid_out.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_mask_out.rcbuffer->pybuffer);
   __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_point_out.rcbuffer->pybuffer);
   __pyx_L2:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_grid_out);
-  __Pyx_XDECREF((PyObject *)__pyx_v_mask_out);
   __Pyx_XDECREF((PyObject *)__pyx_v_point_out);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -5446,15 +5412,15 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_4retreive(struct __pyx_obj_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_8voxelocc_14GPUTransformer_7__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9voxelfeat_14GPUTransformer_7__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5479,14 +5445,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__reduce_cython__", 0))) return NULL;
-  __pyx_r = __pyx_pf_8voxelocc_14GPUTransformer_6__reduce_cython__(((struct __pyx_obj_8voxelocc_GPUTransformer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_9voxelfeat_14GPUTransformer_6__reduce_cython__(((struct __pyx_obj_9voxelfeat_GPUTransformer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self) {
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -5511,7 +5477,7 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_6__reduce_cython__(CYTHON_U
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_AddTraceback("voxelocc.GPUTransformer.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("voxelfeat.GPUTransformer.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -5526,15 +5492,15 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_6__reduce_cython__(CYTHON_U
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_8voxelocc_14GPUTransformer_9__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8voxelocc_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9voxelfeat_14GPUTransformer_9__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5604,11 +5570,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("voxelocc.GPUTransformer.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("voxelfeat.GPUTransformer.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8voxelocc_14GPUTransformer_8__setstate_cython__(((struct __pyx_obj_8voxelocc_GPUTransformer *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_9voxelfeat_14GPUTransformer_8__setstate_cython__(((struct __pyx_obj_9voxelfeat_GPUTransformer *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -5621,7 +5587,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8voxelocc_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_9voxelfeat_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -5646,14 +5612,710 @@ static PyObject *__pyx_pf_8voxelocc_14GPUTransformer_8__setstate_cython__(CYTHON
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_AddTraceback("voxelocc.GPUTransformer.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("voxelfeat.GPUTransformer.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_8voxelocc_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k) {
+/* "wrapper.pyx":46
+ *     cdef int size
+ *     cdef int featmapsize
+ *     def __cinit__(self, np.ndarray[float, ndim=1, mode = "c"] point not None,             # <<<<<<<<<<<<<<
+ *                     int size, int featsize, int k,
+ *                     np.ndarray[int, ndim=1, mode = "c"] neighbors_indices not None,
+ */
+
+/* Python wrapper */
+static int __pyx_pw_9voxelfeat_19GPUFeatureExtractor_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_9voxelfeat_19GPUFeatureExtractor_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyArrayObject *__pyx_v_point = 0;
+  int __pyx_v_size;
+  int __pyx_v_featsize;
+  int __pyx_v_k;
+  PyArrayObject *__pyx_v_neighbors_indices = 0;
+  PyArrayObject *__pyx_v_eigens = 0;
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[6] = {0,0,0,0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return -1;
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  {
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_point,&__pyx_n_s_size,&__pyx_n_s_featsize,&__pyx_n_s_k,&__pyx_n_s_neighbors_indices,&__pyx_n_s_eigens,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  6: values[5] = __Pyx_Arg_VARARGS(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = __Pyx_Arg_VARARGS(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = __Pyx_Arg_VARARGS(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = __Pyx_Arg_VARARGS(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = __Pyx_Arg_VARARGS(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = __Pyx_Arg_VARARGS(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_VARARGS(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_point)) != 0)) {
+          (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_size)) != 0)) {
+          (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 1); __PYX_ERR(0, 46, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_featsize)) != 0)) {
+          (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 2); __PYX_ERR(0, 46, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_k)) != 0)) {
+          (void)__Pyx_Arg_NewRef_VARARGS(values[3]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 3); __PYX_ERR(0, 46, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_neighbors_indices)) != 0)) {
+          (void)__Pyx_Arg_NewRef_VARARGS(values[4]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 4); __PYX_ERR(0, 46, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_eigens)) != 0)) {
+          (void)__Pyx_Arg_NewRef_VARARGS(values[5]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 5); __PYX_ERR(0, 46, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(0, 46, __pyx_L3_error)
+      }
+    } else if (unlikely(__pyx_nargs != 6)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_Arg_VARARGS(__pyx_args, 0);
+      values[1] = __Pyx_Arg_VARARGS(__pyx_args, 1);
+      values[2] = __Pyx_Arg_VARARGS(__pyx_args, 2);
+      values[3] = __Pyx_Arg_VARARGS(__pyx_args, 3);
+      values[4] = __Pyx_Arg_VARARGS(__pyx_args, 4);
+      values[5] = __Pyx_Arg_VARARGS(__pyx_args, 5);
+    }
+    __pyx_v_point = ((PyArrayObject *)values[0]);
+    __pyx_v_size = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
+    __pyx_v_featsize = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_featsize == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
+    __pyx_v_k = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
+    __pyx_v_neighbors_indices = ((PyArrayObject *)values[4]);
+    __pyx_v_eigens = ((PyArrayObject *)values[5]);
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, __pyx_nargs); __PYX_ERR(0, 46, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_VARARGS(values[__pyx_temp]);
+    }
+  }
+  __Pyx_AddTraceback("voxelfeat.GPUFeatureExtractor.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_point), __pyx_ptype_5numpy_ndarray, 0, "point", 0))) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_neighbors_indices), __pyx_ptype_5numpy_ndarray, 0, "neighbors_indices", 0))) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_eigens), __pyx_ptype_5numpy_ndarray, 0, "eigens", 0))) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_r = __pyx_pf_9voxelfeat_19GPUFeatureExtractor___cinit__(((struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *)__pyx_v_self), __pyx_v_point, __pyx_v_size, __pyx_v_featsize, __pyx_v_k, __pyx_v_neighbors_indices, __pyx_v_eigens);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = -1;
+  __pyx_L0:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_VARARGS(values[__pyx_temp]);
+    }
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_9voxelfeat_19GPUFeatureExtractor___cinit__(struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_featsize, int __pyx_v_k, PyArrayObject *__pyx_v_neighbors_indices, PyArrayObject *__pyx_v_eigens) {
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_eigens;
+  __Pyx_Buffer __pyx_pybuffer_eigens;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_neighbors_indices;
+  __Pyx_Buffer __pyx_pybuffer_neighbors_indices;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_point;
+  __Pyx_Buffer __pyx_pybuffer_point;
+  int __pyx_r;
+  Py_ssize_t __pyx_t_1;
+  int __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __pyx_pybuffer_point.pybuffer.buf = NULL;
+  __pyx_pybuffer_point.refcount = 0;
+  __pyx_pybuffernd_point.data = NULL;
+  __pyx_pybuffernd_point.rcbuffer = &__pyx_pybuffer_point;
+  __pyx_pybuffer_neighbors_indices.pybuffer.buf = NULL;
+  __pyx_pybuffer_neighbors_indices.refcount = 0;
+  __pyx_pybuffernd_neighbors_indices.data = NULL;
+  __pyx_pybuffernd_neighbors_indices.rcbuffer = &__pyx_pybuffer_neighbors_indices;
+  __pyx_pybuffer_eigens.pybuffer.buf = NULL;
+  __pyx_pybuffer_eigens.refcount = 0;
+  __pyx_pybuffernd_eigens.data = NULL;
+  __pyx_pybuffernd_eigens.rcbuffer = &__pyx_pybuffer_eigens;
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_point.rcbuffer->pybuffer, (PyObject*)__pyx_v_point, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_point.diminfo[0].strides = __pyx_pybuffernd_point.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_point.diminfo[0].shape = __pyx_pybuffernd_point.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_neighbors_indices.rcbuffer->pybuffer, (PyObject*)__pyx_v_neighbors_indices, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_neighbors_indices.diminfo[0].strides = __pyx_pybuffernd_neighbors_indices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_neighbors_indices.diminfo[0].shape = __pyx_pybuffernd_neighbors_indices.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_eigens.rcbuffer->pybuffer, (PyObject*)__pyx_v_eigens, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_eigens.diminfo[0].strides = __pyx_pybuffernd_eigens.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_eigens.diminfo[0].shape = __pyx_pybuffernd_eigens.rcbuffer->pybuffer.shape[0];
+
+  /* "wrapper.pyx":51
+ *                     np.ndarray[float, ndim=1, mode = "c"] eigens not None,):
+ * 
+ *         self.size = size             # <<<<<<<<<<<<<<
+ *         self.featmapsize = featsize * size
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])
+ */
+  __pyx_v_self->size = __pyx_v_size;
+
+  /* "wrapper.pyx":52
+ * 
+ *         self.size = size
+ *         self.featmapsize = featsize * size             # <<<<<<<<<<<<<<
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])
+ * 
+ */
+  __pyx_v_self->featmapsize = (__pyx_v_featsize * __pyx_v_size);
+
+  /* "wrapper.pyx":53
+ *         self.size = size
+ *         self.featmapsize = featsize * size
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])             # <<<<<<<<<<<<<<
+ * 
+ *     def get_features(self):
+ */
+  __pyx_t_1 = 0;
+  __pyx_t_2 = -1;
+  if (__pyx_t_1 < 0) {
+    __pyx_t_1 += __pyx_pybuffernd_point.diminfo[0].shape;
+    if (unlikely(__pyx_t_1 < 0)) __pyx_t_2 = 0;
+  } else if (unlikely(__pyx_t_1 >= __pyx_pybuffernd_point.diminfo[0].shape)) __pyx_t_2 = 0;
+  if (unlikely(__pyx_t_2 != -1)) {
+    __Pyx_RaiseBufferIndexError(__pyx_t_2);
+    __PYX_ERR(0, 53, __pyx_L1_error)
+  }
+  __pyx_t_3 = 0;
+  __pyx_t_2 = -1;
+  if (__pyx_t_3 < 0) {
+    __pyx_t_3 += __pyx_pybuffernd_neighbors_indices.diminfo[0].shape;
+    if (unlikely(__pyx_t_3 < 0)) __pyx_t_2 = 0;
+  } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_neighbors_indices.diminfo[0].shape)) __pyx_t_2 = 0;
+  if (unlikely(__pyx_t_2 != -1)) {
+    __Pyx_RaiseBufferIndexError(__pyx_t_2);
+    __PYX_ERR(0, 53, __pyx_L1_error)
+  }
+  __pyx_t_4 = 0;
+  __pyx_t_2 = -1;
+  if (__pyx_t_4 < 0) {
+    __pyx_t_4 += __pyx_pybuffernd_eigens.diminfo[0].shape;
+    if (unlikely(__pyx_t_4 < 0)) __pyx_t_2 = 0;
+  } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_eigens.diminfo[0].shape)) __pyx_t_2 = 0;
+  if (unlikely(__pyx_t_2 != -1)) {
+    __Pyx_RaiseBufferIndexError(__pyx_t_2);
+    __PYX_ERR(0, 53, __pyx_L1_error)
+  }
+  __pyx_v_self->gfe = new GPUFeatureExtractor((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_point.diminfo[0].strides))), __pyx_v_size, __pyx_v_featsize, __pyx_v_k, (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_neighbors_indices.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_neighbors_indices.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_eigens.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_eigens.diminfo[0].strides))));
+
+  /* "wrapper.pyx":46
+ *     cdef int size
+ *     cdef int featmapsize
+ *     def __cinit__(self, np.ndarray[float, ndim=1, mode = "c"] point not None,             # <<<<<<<<<<<<<<
+ *                     int size, int featsize, int k,
+ *                     np.ndarray[int, ndim=1, mode = "c"] neighbors_indices not None,
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_eigens.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors_indices.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_point.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
+  __Pyx_AddTraceback("voxelfeat.GPUFeatureExtractor.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  goto __pyx_L2;
+  __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_eigens.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors_indices.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_point.rcbuffer->pybuffer);
+  __pyx_L2:;
+  return __pyx_r;
+}
+
+/* "wrapper.pyx":55
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])
+ * 
+ *     def get_features(self):             # <<<<<<<<<<<<<<
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] feature = np.zeros(self.featmapsize, dtype=np.float32)
+ *         self.gfe.get_features(&feature[0])
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9voxelfeat_19GPUFeatureExtractor_3get_features(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_9voxelfeat_19GPUFeatureExtractor_3get_features = {"get_features", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_19GPUFeatureExtractor_3get_features, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_19GPUFeatureExtractor_3get_features(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_features (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) {
+    __Pyx_RaiseArgtupleInvalid("get_features", 1, 0, 0, __pyx_nargs); return NULL;}
+  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "get_features", 0))) return NULL;
+  __pyx_r = __pyx_pf_9voxelfeat_19GPUFeatureExtractor_2get_features(((struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9voxelfeat_19GPUFeatureExtractor_2get_features(struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self) {
+  PyArrayObject *__pyx_v_feature = 0;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_feature;
+  __Pyx_Buffer __pyx_pybuffer_feature;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyArrayObject *__pyx_t_6 = NULL;
+  Py_ssize_t __pyx_t_7;
+  int __pyx_t_8;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_features", 1);
+  __pyx_pybuffer_feature.pybuffer.buf = NULL;
+  __pyx_pybuffer_feature.refcount = 0;
+  __pyx_pybuffernd_feature.data = NULL;
+  __pyx_pybuffernd_feature.rcbuffer = &__pyx_pybuffer_feature;
+
+  /* "wrapper.pyx":56
+ * 
+ *     def get_features(self):
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] feature = np.zeros(self.featmapsize, dtype=np.float32)             # <<<<<<<<<<<<<<
+ *         self.gfe.get_features(&feature[0])
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->featmapsize); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_6 = ((PyArrayObject *)__pyx_t_5);
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_feature.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+      __pyx_v_feature = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_feature.rcbuffer->pybuffer.buf = NULL;
+      __PYX_ERR(0, 56, __pyx_L1_error)
+    } else {__pyx_pybuffernd_feature.diminfo[0].strides = __pyx_pybuffernd_feature.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_feature.diminfo[0].shape = __pyx_pybuffernd_feature.rcbuffer->pybuffer.shape[0];
+    }
+  }
+  __pyx_t_6 = 0;
+  __pyx_v_feature = ((PyArrayObject *)__pyx_t_5);
+  __pyx_t_5 = 0;
+
+  /* "wrapper.pyx":57
+ *     def get_features(self):
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] feature = np.zeros(self.featmapsize, dtype=np.float32)
+ *         self.gfe.get_features(&feature[0])             # <<<<<<<<<<<<<<
+ * 
+ *         return feature
+ */
+  __pyx_t_7 = 0;
+  __pyx_t_8 = -1;
+  if (__pyx_t_7 < 0) {
+    __pyx_t_7 += __pyx_pybuffernd_feature.diminfo[0].shape;
+    if (unlikely(__pyx_t_7 < 0)) __pyx_t_8 = 0;
+  } else if (unlikely(__pyx_t_7 >= __pyx_pybuffernd_feature.diminfo[0].shape)) __pyx_t_8 = 0;
+  if (unlikely(__pyx_t_8 != -1)) {
+    __Pyx_RaiseBufferIndexError(__pyx_t_8);
+    __PYX_ERR(0, 57, __pyx_L1_error)
+  }
+  __pyx_v_self->gfe->get_features((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_feature.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_feature.diminfo[0].strides))));
+
+  /* "wrapper.pyx":59
+ *         self.gfe.get_features(&feature[0])
+ * 
+ *         return feature             # <<<<<<<<<<<<<<
+ * 
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF((PyObject *)__pyx_v_feature);
+  __pyx_r = ((PyObject *)__pyx_v_feature);
+  goto __pyx_L0;
+
+  /* "wrapper.pyx":55
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])
+ * 
+ *     def get_features(self):             # <<<<<<<<<<<<<<
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] feature = np.zeros(self.featmapsize, dtype=np.float32)
+ *         self.gfe.get_features(&feature[0])
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_feature.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
+  __Pyx_AddTraceback("voxelfeat.GPUFeatureExtractor.get_features", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  goto __pyx_L2;
+  __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_feature.rcbuffer->pybuffer);
+  __pyx_L2:;
+  __Pyx_XDECREF((PyObject *)__pyx_v_feature);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9voxelfeat_19GPUFeatureExtractor_5__reduce_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_9voxelfeat_19GPUFeatureExtractor_5__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_19GPUFeatureExtractor_5__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_19GPUFeatureExtractor_5__reduce_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) {
+    __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL;}
+  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__reduce_cython__", 0))) return NULL;
+  __pyx_r = __pyx_pf_9voxelfeat_19GPUFeatureExtractor_4__reduce_cython__(((struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9voxelfeat_19GPUFeatureExtractor_4__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 1);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ */
+  __Pyx_Raise(__pyx_builtin_TypeError, __pyx_kp_s_no_default___reduce___due_to_non, 0, 0);
+  __PYX_ERR(1, 2, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("voxelfeat.GPUFeatureExtractor.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9voxelfeat_19GPUFeatureExtractor_7__setstate_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_9voxelfeat_19GPUFeatureExtractor_7__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_19GPUFeatureExtractor_7__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9voxelfeat_19GPUFeatureExtractor_7__setstate_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  CYTHON_UNUSED PyObject *__pyx_v___pyx_state = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_pyx_state,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_pyx_state)) != 0)) {
+          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 3, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate_cython__") < 0)) __PYX_ERR(1, 3, __pyx_L3_error)
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+    }
+    __pyx_v___pyx_state = values[0];
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__setstate_cython__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 3, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
+    }
+  }
+  __Pyx_AddTraceback("voxelfeat.GPUFeatureExtractor.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_9voxelfeat_19GPUFeatureExtractor_6__setstate_cython__(((struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *)__pyx_v_self), __pyx_v___pyx_state);
+
+  /* function exit code */
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
+    }
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9voxelfeat_19GPUFeatureExtractor_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_9voxelfeat_GPUFeatureExtractor *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 1);
+
+  /* "(tree fragment)":4
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"             # <<<<<<<<<<<<<<
+ */
+  __Pyx_Raise(__pyx_builtin_TypeError, __pyx_kp_s_no_default___reduce___due_to_non, 0, 0);
+  __PYX_ERR(1, 4, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("voxelfeat.GPUFeatureExtractor.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_tp_new_9voxelfeat_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o;
   #if CYTHON_COMPILING_IN_LIMITED_API
   allocfunc alloc_func = (allocfunc)PyType_GetSlot(t, Py_tp_alloc);
@@ -5666,17 +6328,17 @@ static PyObject *__pyx_tp_new_8voxelocc_GPUTransformer(PyTypeObject *t, PyObject
   }
   if (unlikely(!o)) return 0;
   #endif
-  if (unlikely(__pyx_pw_8voxelocc_14GPUTransformer_1__cinit__(o, a, k) < 0)) goto bad;
+  if (unlikely(__pyx_pw_9voxelfeat_14GPUTransformer_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_8voxelocc_GPUTransformer(PyObject *o) {
+static void __pyx_tp_dealloc_9voxelfeat_GPUTransformer(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely((PY_VERSION_HEX >= 0x03080000 || __Pyx_PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE)) && __Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_8voxelocc_GPUTransformer) {
+    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_9voxelfeat_GPUTransformer) {
       if (PyObject_CallFinalizerFromDealloc(o)) return;
     }
   }
@@ -5691,35 +6353,35 @@ static void __pyx_tp_dealloc_8voxelocc_GPUTransformer(PyObject *o) {
   #endif
 }
 
-static PyMethodDef __pyx_methods_8voxelocc_GPUTransformer[] = {
-  {"transform", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_3transform, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"retreive", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_5retreive, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8voxelocc_14GPUTransformer_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+static PyMethodDef __pyx_methods_9voxelfeat_GPUTransformer[] = {
+  {"transform", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_3transform, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"retreive", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_5retreive, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_14GPUTransformer_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
-static PyType_Slot __pyx_type_8voxelocc_GPUTransformer_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_8voxelocc_GPUTransformer},
-  {Py_tp_methods, (void *)__pyx_methods_8voxelocc_GPUTransformer},
-  {Py_tp_new, (void *)__pyx_tp_new_8voxelocc_GPUTransformer},
+static PyType_Slot __pyx_type_9voxelfeat_GPUTransformer_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_9voxelfeat_GPUTransformer},
+  {Py_tp_methods, (void *)__pyx_methods_9voxelfeat_GPUTransformer},
+  {Py_tp_new, (void *)__pyx_tp_new_9voxelfeat_GPUTransformer},
   {0, 0},
 };
-static PyType_Spec __pyx_type_8voxelocc_GPUTransformer_spec = {
-  "voxelocc.GPUTransformer",
-  sizeof(struct __pyx_obj_8voxelocc_GPUTransformer),
+static PyType_Spec __pyx_type_9voxelfeat_GPUTransformer_spec = {
+  "voxelfeat.GPUTransformer",
+  sizeof(struct __pyx_obj_9voxelfeat_GPUTransformer),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE,
-  __pyx_type_8voxelocc_GPUTransformer_slots,
+  __pyx_type_9voxelfeat_GPUTransformer_slots,
 };
 #else
 
-static PyTypeObject __pyx_type_8voxelocc_GPUTransformer = {
+static PyTypeObject __pyx_type_9voxelfeat_GPUTransformer = {
   PyVarObject_HEAD_INIT(0, 0)
-  "voxelocc.""GPUTransformer", /*tp_name*/
-  sizeof(struct __pyx_obj_8voxelocc_GPUTransformer), /*tp_basicsize*/
+  "voxelfeat.""GPUTransformer", /*tp_name*/
+  sizeof(struct __pyx_obj_9voxelfeat_GPUTransformer), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_8voxelocc_GPUTransformer, /*tp_dealloc*/
+  __pyx_tp_dealloc_9voxelfeat_GPUTransformer, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -5752,7 +6414,7 @@ static PyTypeObject __pyx_type_8voxelocc_GPUTransformer = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_8voxelocc_GPUTransformer, /*tp_methods*/
+  __pyx_methods_9voxelfeat_GPUTransformer, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -5764,7 +6426,152 @@ static PyTypeObject __pyx_type_8voxelocc_GPUTransformer = {
   #endif
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_8voxelocc_GPUTransformer, /*tp_new*/
+  __pyx_tp_new_9voxelfeat_GPUTransformer, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  #if CYTHON_USE_TP_FINALIZE
+  0, /*tp_finalize*/
+  #else
+  NULL, /*tp_finalize*/
+  #endif
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b1 && (!CYTHON_COMPILING_IN_PYPY || PYPY_VERSION_NUM >= 0x07030800)
+  0, /*tp_vectorcall*/
+  #endif
+  #if __PYX_NEED_TP_PRINT_SLOT == 1
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030C0000
+  0, /*tp_watched*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030d00A4
+  0, /*tp_versions_used*/
+  #endif
+  #if CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX >= 0x03090000 && PY_VERSION_HEX < 0x030a0000
+  0, /*tp_pypy_flags*/
+  #endif
+};
+#endif
+
+static PyObject *__pyx_tp_new_9voxelfeat_GPUFeatureExtractor(PyTypeObject *t, PyObject *a, PyObject *k) {
+  PyObject *o;
+  #if CYTHON_COMPILING_IN_LIMITED_API
+  allocfunc alloc_func = (allocfunc)PyType_GetSlot(t, Py_tp_alloc);
+  o = alloc_func(t, 0);
+  #else
+  if (likely(!__Pyx_PyType_HasFeature(t, Py_TPFLAGS_IS_ABSTRACT))) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
+  if (unlikely(!o)) return 0;
+  #endif
+  if (unlikely(__pyx_pw_9voxelfeat_19GPUFeatureExtractor_1__cinit__(o, a, k) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
+}
+
+static void __pyx_tp_dealloc_9voxelfeat_GPUFeatureExtractor(PyObject *o) {
+  #if CYTHON_USE_TP_FINALIZE
+  if (unlikely((PY_VERSION_HEX >= 0x03080000 || __Pyx_PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE)) && __Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
+    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_9voxelfeat_GPUFeatureExtractor) {
+      if (PyObject_CallFinalizerFromDealloc(o)) return;
+    }
+  }
+  #endif
+  #if CYTHON_USE_TYPE_SLOTS || CYTHON_COMPILING_IN_PYPY
+  (*Py_TYPE(o)->tp_free)(o);
+  #else
+  {
+    freefunc tp_free = (freefunc)PyType_GetSlot(Py_TYPE(o), Py_tp_free);
+    if (tp_free) tp_free(o);
+  }
+  #endif
+}
+
+static PyMethodDef __pyx_methods_9voxelfeat_GPUFeatureExtractor[] = {
+  {"get_features", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_19GPUFeatureExtractor_3get_features, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_19GPUFeatureExtractor_5__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9voxelfeat_19GPUFeatureExtractor_7__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {0, 0, 0, 0}
+};
+#if CYTHON_USE_TYPE_SPECS
+static PyType_Slot __pyx_type_9voxelfeat_GPUFeatureExtractor_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_9voxelfeat_GPUFeatureExtractor},
+  {Py_tp_methods, (void *)__pyx_methods_9voxelfeat_GPUFeatureExtractor},
+  {Py_tp_new, (void *)__pyx_tp_new_9voxelfeat_GPUFeatureExtractor},
+  {0, 0},
+};
+static PyType_Spec __pyx_type_9voxelfeat_GPUFeatureExtractor_spec = {
+  "voxelfeat.GPUFeatureExtractor",
+  sizeof(struct __pyx_obj_9voxelfeat_GPUFeatureExtractor),
+  0,
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE,
+  __pyx_type_9voxelfeat_GPUFeatureExtractor_slots,
+};
+#else
+
+static PyTypeObject __pyx_type_9voxelfeat_GPUFeatureExtractor = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "voxelfeat.""GPUFeatureExtractor", /*tp_name*/
+  sizeof(struct __pyx_obj_9voxelfeat_GPUFeatureExtractor), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_9voxelfeat_GPUFeatureExtractor, /*tp_dealloc*/
+  #if PY_VERSION_HEX < 0x030800b4
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4
+  0, /*tp_vectorcall_offset*/
+  #endif
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #endif
+  #if PY_MAJOR_VERSION >= 3
+  0, /*tp_as_async*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_9voxelfeat_GPUFeatureExtractor, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  #if !CYTHON_USE_TYPE_SPECS
+  0, /*tp_dictoffset*/
+  #endif
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_9voxelfeat_GPUFeatureExtractor, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -5816,6 +6623,10 @@ static PyMethodDef __pyx_methods[] = {
 static int __Pyx_CreateStringTabAndInitStrings(void) {
   __Pyx_StringTabEntry __pyx_string_tab[] = {
     {&__pyx_n_s_AssertionError, __pyx_k_AssertionError, sizeof(__pyx_k_AssertionError), 0, 0, 1, 1},
+    {&__pyx_n_s_GPUFeatureExtractor, __pyx_k_GPUFeatureExtractor, sizeof(__pyx_k_GPUFeatureExtractor), 0, 0, 1, 1},
+    {&__pyx_n_s_GPUFeatureExtractor___reduce_cyt, __pyx_k_GPUFeatureExtractor___reduce_cyt, sizeof(__pyx_k_GPUFeatureExtractor___reduce_cyt), 0, 0, 1, 1},
+    {&__pyx_n_s_GPUFeatureExtractor___setstate_c, __pyx_k_GPUFeatureExtractor___setstate_c, sizeof(__pyx_k_GPUFeatureExtractor___setstate_c), 0, 0, 1, 1},
+    {&__pyx_n_s_GPUFeatureExtractor_get_features, __pyx_k_GPUFeatureExtractor_get_features, sizeof(__pyx_k_GPUFeatureExtractor_get_features), 0, 0, 1, 1},
     {&__pyx_n_s_GPUTransformer, __pyx_k_GPUTransformer, sizeof(__pyx_k_GPUTransformer), 0, 0, 1, 1},
     {&__pyx_n_s_GPUTransformer___reduce_cython, __pyx_k_GPUTransformer___reduce_cython, sizeof(__pyx_k_GPUTransformer___reduce_cython), 0, 0, 1, 1},
     {&__pyx_n_s_GPUTransformer___setstate_cython, __pyx_k_GPUTransformer___setstate_cython, sizeof(__pyx_k_GPUTransformer___setstate_cython), 0, 0, 1, 1},
@@ -5823,28 +6634,31 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_GPUTransformer_transform, __pyx_k_GPUTransformer_transform, sizeof(__pyx_k_GPUTransformer_transform), 0, 0, 1, 1},
     {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
     {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
-    {&__pyx_n_s__11, __pyx_k__11, sizeof(__pyx_k__11), 0, 0, 1, 1},
+    {&__pyx_n_s__15, __pyx_k__15, sizeof(__pyx_k__15), 0, 0, 1, 1},
     {&__pyx_n_s__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 0, 1, 1},
     {&__pyx_n_s_asyncio_coroutines, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
     {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
     {&__pyx_kp_u_disable, __pyx_k_disable, sizeof(__pyx_k_disable), 0, 1, 0, 0},
     {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
+    {&__pyx_n_s_eigens, __pyx_k_eigens, sizeof(__pyx_k_eigens), 0, 0, 1, 1},
     {&__pyx_kp_u_enable, __pyx_k_enable, sizeof(__pyx_k_enable), 0, 1, 0, 0},
-    {&__pyx_n_s_enough_large, __pyx_k_enough_large, sizeof(__pyx_k_enough_large), 0, 0, 1, 1},
+    {&__pyx_n_s_featsize, __pyx_k_featsize, sizeof(__pyx_k_featsize), 0, 0, 1, 1},
+    {&__pyx_n_s_feature, __pyx_k_feature, sizeof(__pyx_k_feature), 0, 0, 1, 1},
     {&__pyx_n_s_float32, __pyx_k_float32, sizeof(__pyx_k_float32), 0, 0, 1, 1},
     {&__pyx_kp_u_gc, __pyx_k_gc, sizeof(__pyx_k_gc), 0, 1, 0, 0},
+    {&__pyx_n_s_get_features, __pyx_k_get_features, sizeof(__pyx_k_get_features), 0, 0, 1, 1},
     {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
-    {&__pyx_n_s_grid_out, __pyx_k_grid_out, sizeof(__pyx_k_grid_out), 0, 0, 1, 1},
     {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
     {&__pyx_n_s_initializing, __pyx_k_initializing, sizeof(__pyx_k_initializing), 0, 0, 1, 1},
     {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
     {&__pyx_n_s_is_coroutine, __pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 0, 1, 1},
     {&__pyx_kp_u_isenabled, __pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0, 0},
+    {&__pyx_n_s_k, __pyx_k_k, sizeof(__pyx_k_k), 0, 0, 1, 1},
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-    {&__pyx_n_s_mask_out, __pyx_k_mask_out, sizeof(__pyx_k_mask_out), 0, 0, 1, 1},
     {&__pyx_n_s_max_height, __pyx_k_max_height, sizeof(__pyx_k_max_height), 0, 0, 1, 1},
     {&__pyx_n_s_max_length, __pyx_k_max_length, sizeof(__pyx_k_max_length), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
+    {&__pyx_n_s_neighbors_indices, __pyx_k_neighbors_indices, sizeof(__pyx_k_neighbors_indices), 0, 0, 1, 1},
     {&__pyx_kp_s_no_default___reduce___due_to_non, __pyx_k_no_default___reduce___due_to_non, sizeof(__pyx_k_no_default___reduce___due_to_non), 0, 0, 1, 0},
     {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
     {&__pyx_n_s_num_height, __pyx_k_num_height, sizeof(__pyx_k_num_height), 0, 0, 1, 1},
@@ -5868,7 +6682,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
     {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
     {&__pyx_n_s_transform, __pyx_k_transform, sizeof(__pyx_k_transform), 0, 0, 1, 1},
-    {&__pyx_n_s_voxelocc, __pyx_k_voxelocc, sizeof(__pyx_k_voxelocc), 0, 0, 1, 1},
+    {&__pyx_n_s_voxelfeat, __pyx_k_voxelfeat, sizeof(__pyx_k_voxelfeat), 0, 0, 1, 1},
     {&__pyx_kp_s_wrapper_pyx, __pyx_k_wrapper_pyx, sizeof(__pyx_k_wrapper_pyx), 0, 0, 1, 0},
     {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
     {0, 0, 0, 0, 0, 0, 0}
@@ -5912,29 +6726,29 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "wrapper.pyx":29
- *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, enough_large)
+  /* "wrapper.pyx":33
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, featsize)
  * 
  *     def transform(self):             # <<<<<<<<<<<<<<
  *         self.g.transform()
  * 
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
-  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wrapper_pyx, __pyx_n_s_transform, 29, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wrapper_pyx, __pyx_n_s_transform, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 33, __pyx_L1_error)
 
-  /* "wrapper.pyx":32
+  /* "wrapper.pyx":36
  *         self.g.transform()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)
+ *         self.g.retreive(&point_out[0])
  */
-  __pyx_tuple__6 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_grid_out, __pyx_n_s_mask_out, __pyx_n_s_point_out); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_point_out); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
-  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wrapper_pyx, __pyx_n_s_retreive, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wrapper_pyx, __pyx_n_s_retreive, 36, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 36, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -5953,6 +6767,33 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
   __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(1, 3, __pyx_L1_error)
+
+  /* "wrapper.pyx":55
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])
+ * 
+ *     def get_features(self):             # <<<<<<<<<<<<<<
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] feature = np.zeros(self.featmapsize, dtype=np.float32)
+ *         self.gfe.get_features(&feature[0])
+ */
+  __pyx_tuple__11 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_feature); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_wrapper_pyx, __pyx_n_s_get_features, 55, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 55, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ */
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(1, 1, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ */
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -6040,27 +6881,50 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8voxelocc_GPUTransformer = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8voxelocc_GPUTransformer_spec, NULL); if (unlikely(!__pyx_ptype_8voxelocc_GPUTransformer)) __PYX_ERR(0, 13, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8voxelocc_GPUTransformer_spec, __pyx_ptype_8voxelocc_GPUTransformer) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_ptype_9voxelfeat_GPUTransformer = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_9voxelfeat_GPUTransformer_spec, NULL); if (unlikely(!__pyx_ptype_9voxelfeat_GPUTransformer)) __PYX_ERR(0, 17, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_9voxelfeat_GPUTransformer_spec, __pyx_ptype_9voxelfeat_GPUTransformer) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
   #else
-  __pyx_ptype_8voxelocc_GPUTransformer = &__pyx_type_8voxelocc_GPUTransformer;
+  __pyx_ptype_9voxelfeat_GPUTransformer = &__pyx_type_9voxelfeat_GPUTransformer;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8voxelocc_GPUTransformer) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_9voxelfeat_GPUTransformer) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
-  __pyx_ptype_8voxelocc_GPUTransformer->tp_print = 0;
+  __pyx_ptype_9voxelfeat_GPUTransformer->tp_print = 0;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_8voxelocc_GPUTransformer->tp_dictoffset && __pyx_ptype_8voxelocc_GPUTransformer->tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_ptype_8voxelocc_GPUTransformer->tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_9voxelfeat_GPUTransformer->tp_dictoffset && __pyx_ptype_9voxelfeat_GPUTransformer->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_ptype_9voxelfeat_GPUTransformer->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUTransformer, (PyObject *) __pyx_ptype_8voxelocc_GPUTransformer) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUTransformer, (PyObject *) __pyx_ptype_9voxelfeat_GPUTransformer) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8voxelocc_GPUTransformer) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_9voxelfeat_GPUTransformer) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
+  #endif
+  #if CYTHON_USE_TYPE_SPECS
+  __pyx_ptype_9voxelfeat_GPUFeatureExtractor = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_9voxelfeat_GPUFeatureExtractor_spec, NULL); if (unlikely(!__pyx_ptype_9voxelfeat_GPUFeatureExtractor)) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_9voxelfeat_GPUFeatureExtractor_spec, __pyx_ptype_9voxelfeat_GPUFeatureExtractor) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  #else
+  __pyx_ptype_9voxelfeat_GPUFeatureExtractor = &__pyx_type_9voxelfeat_GPUFeatureExtractor;
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  #endif
+  #if !CYTHON_USE_TYPE_SPECS
+  if (__Pyx_PyType_Ready(__pyx_ptype_9voxelfeat_GPUFeatureExtractor) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  #endif
+  #if PY_MAJOR_VERSION < 3
+  __pyx_ptype_9voxelfeat_GPUFeatureExtractor->tp_print = 0;
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_9voxelfeat_GPUFeatureExtractor->tp_dictoffset && __pyx_ptype_9voxelfeat_GPUFeatureExtractor->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_ptype_9voxelfeat_GPUFeatureExtractor->tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  #endif
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUFeatureExtractor, (PyObject *) __pyx_ptype_9voxelfeat_GPUFeatureExtractor) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_9voxelfeat_GPUFeatureExtractor) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
   #endif
   __Pyx_RefNannyFinishContext();
   return 0;
@@ -6135,10 +6999,10 @@ static int __Pyx_modinit_function_import_code(void) {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_voxelocc(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_voxelfeat(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_voxelocc},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_voxelfeat},
   {0, NULL}
 };
 #endif
@@ -6151,7 +7015,7 @@ namespace {
   #endif
   {
       PyModuleDef_HEAD_INIT,
-      "voxelocc",
+      "voxelfeat",
       0, /* m_doc */
     #if CYTHON_PEP489_MULTI_PHASE_INIT
       0, /* m_size */
@@ -6199,11 +7063,11 @@ namespace {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initvoxelocc(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initvoxelocc(void)
+__Pyx_PyMODINIT_FUNC initvoxelfeat(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initvoxelfeat(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_voxelocc(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_voxelocc(void)
+__Pyx_PyMODINIT_FUNC PyInit_voxelfeat(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_voxelfeat(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -6284,7 +7148,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_voxelocc(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_voxelfeat(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -6302,7 +7166,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_voxelocc(PyObject *__pyx_pyinit_mo
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'voxelocc' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'voxelfeat' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -6314,13 +7178,13 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_voxelocc(PyObject *__pyx_pyinit_mo
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("voxelocc", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("voxelfeat", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   if (unlikely(!__pyx_m)) __PYX_ERR(0, 1, __pyx_L1_error)
   #elif CYTHON_USE_MODULE_STATE
   __pyx_t_1 = PyModule_Create(&__pyx_moduledef); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   {
     int add_module_result = PyState_AddModule(__pyx_t_1, &__pyx_moduledef);
-    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "voxelocc" pseudovariable */
+    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "voxelfeat" pseudovariable */
     if (unlikely((add_module_result < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     pystate_addmodule_run = 1;
   }
@@ -6344,7 +7208,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_voxelocc(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_voxelfeat(void)", 0);
   if (__Pyx_check_binary_version(__PYX_LIMITED_VERSION_HEX, __Pyx_get_runtime_version(), CYTHON_COMPILING_IN_LIMITED_API) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -6382,14 +7246,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_voxelocc) {
+  if (__pyx_module_is_main_voxelfeat) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "voxelocc")) {
-      if (unlikely((PyDict_SetItemString(modules, "voxelocc", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "voxelfeat")) {
+      if (unlikely((PyDict_SetItemString(modules, "voxelfeat", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -6439,38 +7303,38 @@ if (!__Pyx_RefNanny) {
   if ((1)); else __PYX_ERR(0, 5, __pyx_L1_error)
   #endif
 
-  /* "wrapper.pyx":29
- *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, enough_large)
+  /* "wrapper.pyx":33
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &x[0], &y[0], &height[0], max_length, max_height, num_x, num_y, num_height, featsize)
  * 
  *     def transform(self):             # <<<<<<<<<<<<<<
  *         self.g.transform()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8voxelocc_14GPUTransformer_3transform, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer_transform, NULL, __pyx_n_s_voxelocc, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_14GPUTransformer_3transform, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer_transform, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8voxelocc_GPUTransformer, __pyx_n_s_transform, __pyx_t_2) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9voxelfeat_GPUTransformer, __pyx_n_s_transform, __pyx_t_2) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_8voxelocc_GPUTransformer);
+  PyType_Modified(__pyx_ptype_9voxelfeat_GPUTransformer);
 
-  /* "wrapper.pyx":32
+  /* "wrapper.pyx":36
  *         self.g.transform()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
- *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
- *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size, dtype=np.float32)
+ *         self.g.retreive(&point_out[0])
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8voxelocc_14GPUTransformer_5retreive, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer_retreive, NULL, __pyx_n_s_voxelocc, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_14GPUTransformer_5retreive, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer_retreive, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8voxelocc_GPUTransformer, __pyx_n_s_retreive, __pyx_t_2) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9voxelfeat_GPUTransformer, __pyx_n_s_retreive, __pyx_t_2) < 0) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_8voxelocc_GPUTransformer);
+  PyType_Modified(__pyx_ptype_9voxelfeat_GPUTransformer);
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8voxelocc_14GPUTransformer_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer___reduce_cython, NULL, __pyx_n_s_voxelocc, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_14GPUTransformer_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer___reduce_cython, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_reduce_cython, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6481,7 +7345,41 @@ if (!__Pyx_RefNanny) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8voxelocc_14GPUTransformer_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer___setstate_cython, NULL, __pyx_n_s_voxelocc, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_14GPUTransformer_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUTransformer___setstate_cython, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "wrapper.pyx":55
+ *         self.gfe = new C_GPUFeatureExtractor(&point[0], size, featsize, k, &neighbors_indices[0], &eigens[0])
+ * 
+ *     def get_features(self):             # <<<<<<<<<<<<<<
+ *         cdef np.ndarray[float, ndim=1, mode = "c"] feature = np.zeros(self.featmapsize, dtype=np.float32)
+ *         self.gfe.get_features(&feature[0])
+ */
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_19GPUFeatureExtractor_3get_features, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUFeatureExtractor_get_features, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9voxelfeat_GPUFeatureExtractor, __pyx_n_s_get_features, __pyx_t_2) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  PyType_Modified(__pyx_ptype_9voxelfeat_GPUFeatureExtractor);
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ */
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_19GPUFeatureExtractor_5__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUFeatureExtractor___reduce_cyt, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_reduce_cython, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ */
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9voxelfeat_19GPUFeatureExtractor_7__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GPUFeatureExtractor___setstate_c, NULL, __pyx_n_s_voxelfeat, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6503,7 +7401,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init voxelocc", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init voxelfeat", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -6517,7 +7415,7 @@ if (!__Pyx_RefNanny) {
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init voxelocc");
+    PyErr_SetString(PyExc_ImportError, "init voxelfeat");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -11485,6 +12383,22 @@ raise_neg_overflow:
     }
 }
 
+/* FormatTypeName */
+  #if CYTHON_COMPILING_IN_LIMITED_API
+static __Pyx_TypeName
+__Pyx_PyType_GetName(PyTypeObject* tp)
+{
+    PyObject *name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_n_s_name);
+    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
+        PyErr_Clear();
+        Py_XDECREF(name);
+        name = __Pyx_NewRef(__pyx_n_s__15);
+    }
+    return name;
+}
+#endif
+
 /* CIntToPy */
   static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
@@ -11555,22 +12469,6 @@ raise_neg_overflow:
 #endif
     }
 }
-
-/* FormatTypeName */
-  #if CYTHON_COMPILING_IN_LIMITED_API
-static __Pyx_TypeName
-__Pyx_PyType_GetName(PyTypeObject* tp)
-{
-    PyObject *name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_n_s_name);
-    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
-        PyErr_Clear();
-        Py_XDECREF(name);
-        name = __Pyx_NewRef(__pyx_n_s__11);
-    }
-    return name;
-}
-#endif
 
 /* CIntFromPy */
   static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {

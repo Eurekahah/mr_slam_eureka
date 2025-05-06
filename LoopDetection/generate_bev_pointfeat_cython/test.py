@@ -1,4 +1,5 @@
 import voxelfeat
+import voxelocc
 import numpy as np
 import numpy.testing as npt
 import time

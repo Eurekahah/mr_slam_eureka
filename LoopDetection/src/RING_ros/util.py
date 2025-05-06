@@ -359,6 +359,7 @@ def fast_corr_RINGplusplus(a, b):
 
 
 # compute the max correlation value and the corresponding circular shift 
+# 
 def fast_corr(a, b):
     corr = torch.fft.ifft2(a*b.conj(), dim=-2, norm="ortho")
     corr = torch.sqrt(corr.real**2 + corr.imag**2)

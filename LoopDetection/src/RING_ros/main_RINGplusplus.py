@@ -399,7 +399,7 @@ if __name__ == "__main__":
     parser.add_argument('--icp_tolerance', type=float, default=0.001) 
     parser.add_argument('--icp_max_distance', type=float, default=5.0)
     parser.add_argument('--num_icp_points', type=int, default=6000) # 6000 is enough for real time
-    parser.add_argument('--icp_fitness_score', type=float, default=0.13) # icp fitness score threshold
+    parser.add_argument('--icp_fitness_score', type=float, default=0.2) # icp fitness score threshold
 
     args = parser.parse_args()
 

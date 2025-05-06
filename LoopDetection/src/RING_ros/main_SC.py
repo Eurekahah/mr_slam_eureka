@@ -107,7 +107,7 @@ def get_pose_msg_from_homo_matrix(se3):
 # apply icp using fast_gicp (https://github.com/SMRT-AIST/fast_gicp)
 def fast_gicp(source, target, max_correspondence_distance=1.0, init_pose=np.eye(4)):
     # downsample the point cloud before registration
-
+    
     source = pygicp.downsample(source, 0.2)
     target = pygicp.downsample(target, 0.2)
 
@@ -176,7 +176,7 @@ def detect_loop_icp_SC(robotid_current, idx_current, pc_current, SC_current, Rin
         pc_matched_pc = pc_candidates[idx_top1_pc]
         fitness_pc, loop_transform = fast_gicp(pc_current, pc_matched_pc, max_correspondence_distance=cfg.icp_max_distance, init_pose=init_pose_pc)
         
-        print("fitness: ", fitness_pc)
+        print("fitness: ", fitness_pc,"threshold: " ,cfg.icp_fitness_score)
         if fitness_pc < cfg.icp_fitness_score and robotid_current != robotid_candidate:
             print("ICP fitness score is less than threshold, accept the loop.")
             Loop_msgs = Loops()
@@ -335,7 +335,7 @@ def callback1(data):
     # convert position and quaternion pose to se3 matrix
     se3 = get_homo_matrix_from_pose_msg(data.pose)
 
-    # generate RING and TIRING descriptors
+    # generate Scan Context descriptors
     times = time.time()
     pc_sc = generate_scan_context(pc_normalized)
     ringkey_pc = SC.make_ringkey(pc_sc) 
@@ -495,7 +495,7 @@ if __name__ == "__main__":
     parser.add_argument('--icp_tolerance', type=float, default=0.001) 
     parser.add_argument('--icp_max_distance', type=float, default=5.0)
     parser.add_argument('--num_icp_points', type=int, default=6000) # 6000 is enough for real time
-    parser.add_argument('--icp_fitness_score', type=float, default=0.08) # icp fitness score threshold
+    parser.add_argument('--icp_fitness_score', type=float, default=0.13) # icp fitness score threshold
 
     args = parser.parse_args()
 

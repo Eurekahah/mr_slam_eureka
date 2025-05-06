@@ -22,4 +22,4 @@ max_icp_iter = 50
 icp_tolerance = 0.001
 icp_max_distance = 5.0
 num_icp_points = 6000
-icp_fitness_score = 0.22
+icp_fitness_score = 0.5 # 0.22
