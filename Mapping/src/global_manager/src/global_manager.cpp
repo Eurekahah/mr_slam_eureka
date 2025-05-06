@@ -128,11 +128,12 @@ void GlobalManager::mapSaving(const std_msgs::Bool::ConstPtr& savingSignal)
     GraphAndValues fullGraphAndValues = readFullGraph();
     std::pair<Values, vector<int>> correctedPosePair = correctPoses();
     Values fullInitial = correctedPosePair.first;
-
+    
+    savingGlobalMap(fullInitial);
     savingElevationMap();
     savingPoseGraph();
     savingKeyframes(fullInitial);
-    savingGlobalMap(fullInitial);
+    
   }
 }
 
@@ -140,41 +141,201 @@ void GlobalManager::mapSaving(const std_msgs::Bool::ConstPtr& savingSignal)
 /*
  * Saving global map to output file
  */
+// void GlobalManager::savingGlobalMap(Values fullInitial)
+// {
+//   ROS_INFO("Saving Global Map to %s", global_map_saving_filename_.c_str());
+
+//   // Get all keyframe point clouds and merge into global map
+//   PointCloudI Keyframe;
+//   PointCloudI globalMap;
+//   std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//   for(auto& subscription: subscriptions_){
+//     std::lock_guard<std::mutex> lock2(subscription.mutex);
+//     for(int i = 0; i < subscription.keyframes.size(); i++){
+//       Key g2oid = robotID2Key(subscription.robot_id - start_robot_id_) + i + 1;
+//       if(fullInitial.exists(g2oid)){
+//         Eigen::Isometry3f T = Pose3toIsometry(fullInitial.at<Pose3>(g2oid));
+//         Eigen::Matrix4f transformMatrix = T.matrix();
+//         pcl::transformPointCloud(*subscription.keyframes[i], Keyframe, transformMatrix); 
+//         globalMap += Keyframe;
+//       }
+//     }
+//   }
+//   lock.unlock();
+  
+//   pcl::VoxelGrid<PointTI> voxel;
+//   voxel.setInputCloud (globalMap.makeShared());
+//   voxel.setLeafSize (globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_);
+//   voxel.filter (globalMap);
+//   pcl::io::savePCDFile(global_map_saving_filename_, globalMap);
+// }
+
+
+
+// void GlobalManager::savingGlobalMap(Values fullInitial)
+// {
+
+//   // 检查路径是否存在，不存在则创建
+//   boost::filesystem::path dir(global_map_saving_filename_);
+//   if (!boost::filesystem::exists(dir.parent_path())) {
+//     boost::filesystem::create_directories(dir.parent_path());
+//   }
+
+//   ROS_INFO("Saving Global Map to %s", global_map_saving_filename_.c_str());
+
+//   // 使用 PointXYZRGB 类型的点云
+//   pcl::PointCloud<pcl::PointXYZRGB> Keyframe;
+//   pcl::PointCloud<pcl::PointXYZRGB> globalMap;
+//   std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//   for (auto& subscription : subscriptions_) {
+//     std::lock_guard<std::mutex> lock2(subscription.mutex);
+
+//     // 为每个机器人分配唯一颜色
+//     uint8_t r = (subscription.robot_id % 3 == 0) ? 255 : 0; // Red
+//     uint8_t g = (subscription.robot_id % 3 == 1) ? 255 : 0; // Green
+//     uint8_t b = (subscription.robot_id % 3 == 2) ? 255 : 0; // Blue
+
+//     for (int i = 0; i < subscription.keyframes.size(); i++) {
+//       Key g2oid = robotID2Key(subscription.robot_id - start_robot_id_) + i + 1;
+//       if (fullInitial.exists(g2oid)) {
+//         Eigen::Isometry3f T = Pose3toIsometry(fullInitial.at<Pose3>(g2oid));
+//         Eigen::Matrix4f transformMatrix = T.matrix();
+
+//         // 将点云转换为 PointXYZRGB 类型
+//         pcl::PointCloud<pcl::PointXYZI>::Ptr keyframeI = subscription.keyframes[i];
+//         pcl::PointCloud<pcl::PointXYZRGB> keyframeRGB;
+//         pcl::copyPointCloud(*keyframeI, keyframeRGB);
+
+//         // 为每个点分配颜色
+//         for (auto& point : keyframeRGB.points) {
+//           point.r = r;
+//           point.g = g;
+//           point.b = b;
+//         }
+
+//         // 应用变换
+//         pcl::transformPointCloud(keyframeRGB, Keyframe, transformMatrix);
+
+//         // 合并到全局地图
+//         globalMap += Keyframe;
+//       }
+//     }
+//   }
+//   lock.unlock();
+
+//   // 使用体素滤波器简化点云
+//   pcl::VoxelGrid<pcl::PointXYZRGB> voxel;
+//   voxel.setInputCloud(globalMap.makeShared());
+//   voxel.setLeafSize(globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_);
+//   voxel.filter(globalMap);
+
+//   // 保存点云到文件
+//   pcl::io::savePCDFile(global_map_saving_filename_, globalMap);
+// }
+
+// 计算 subscriptions_ 的大小
+size_t getSubscriptionsSize(const std::forward_list<global_manager::robotHandle_>& subscriptions) {
+  return std::distance(subscriptions.begin(), subscriptions.end());
+}
+
 void GlobalManager::savingGlobalMap(Values fullInitial)
 {
+  // 检查路径是否存在，不存在则创建
+  boost::filesystem::path dir(global_map_saving_filename_);
+  if (!boost::filesystem::exists(dir.parent_path())) {
+    boost::filesystem::create_directories(dir.parent_path());
+  }
+
   ROS_INFO("Saving Global Map to %s", global_map_saving_filename_.c_str());
 
-  // Get all keyframe point clouds and merge into global map
-  PointCloudI Keyframe;
-  PointCloudI globalMap;
+  // 使用 PointXYZRGB 类型的点云
+  pcl::PointCloud<pcl::PointXYZRGB> Keyframe;
+  pcl::PointCloud<pcl::PointXYZRGB> globalMap;
   std::unique_lock<std::mutex> lock(subscriptions_mutex_);
-  for(auto& subscription: subscriptions_){
+
+  // 生成颜色表
+  std::vector<std::tuple<uint8_t, uint8_t, uint8_t>> colorTable;
+  size_t numRobots = getSubscriptionsSize(subscriptions_);
+  for (size_t i = 0; i < numRobots; ++i) {
+    float hue = (360.0f / numRobots) * i; // 在 HSV 色彩空间中均匀分布
+    float saturation = 1.0f;
+    float value = 1.0f;
+
+    // 将 HSV 转换为 RGB
+    int hi = static_cast<int>(hue / 60.0f) % 6;
+    float f = (hue / 60.0f) - hi;
+    float p = value * (1.0f - saturation);
+    float q = value * (1.0f - f * saturation);
+    float t = value * (1.0f - (1.0f - f) * saturation);
+
+    float r, g, b;
+    switch (hi) {
+      case 0: r = value; g = t; b = p; break;
+      case 1: r = q; g = value; b = p; break;
+      case 2: r = p; g = value; b = t; break;
+      case 3: r = p; g = q; b = value; break;
+      case 4: r = t; g = p; b = value; break;
+      case 5: r = value; g = p; b = q; break;
+    }
+
+    colorTable.emplace_back(static_cast<uint8_t>(r * 255), static_cast<uint8_t>(g * 255), static_cast<uint8_t>(b * 255));
+  }
+
+  for (auto& subscription : subscriptions_) {
     std::lock_guard<std::mutex> lock2(subscription.mutex);
-    for(int i = 0; i < subscription.keyframes.size(); i++){
+
+    // 获取当前机器人的颜色
+    auto [r, g, b] = colorTable[subscription.robot_id % numRobots];
+
+    for (int i = 0; i < subscription.keyframes.size(); i++) {
       Key g2oid = robotID2Key(subscription.robot_id - start_robot_id_) + i + 1;
-      if(fullInitial.exists(g2oid)){
+      if (fullInitial.exists(g2oid)) {
         Eigen::Isometry3f T = Pose3toIsometry(fullInitial.at<Pose3>(g2oid));
         Eigen::Matrix4f transformMatrix = T.matrix();
-        pcl::transformPointCloud(*subscription.keyframes[i], Keyframe, transformMatrix); 
+
+        // 将点云转换为 PointXYZRGB 类型
+        pcl::PointCloud<pcl::PointXYZI>::Ptr keyframeI = subscription.keyframes[i];
+        pcl::PointCloud<pcl::PointXYZRGB> keyframeRGB;
+        pcl::copyPointCloud(*keyframeI, keyframeRGB);
+
+        // 为每个点分配颜色
+        for (auto& point : keyframeRGB.points) {
+          point.r = r;
+          point.g = g;
+          point.b = b;
+        }
+
+        // 应用变换
+        pcl::transformPointCloud(keyframeRGB, Keyframe, transformMatrix);
+
+        // 合并到全局地图
         globalMap += Keyframe;
       }
     }
   }
   lock.unlock();
-  
-  pcl::VoxelGrid<PointTI> voxel;
-  voxel.setInputCloud (globalMap.makeShared());
-  voxel.setLeafSize (globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_);
-  voxel.filter (globalMap);
+
+  // 使用体素滤波器简化点云
+  pcl::VoxelGrid<pcl::PointXYZRGB> voxel;
+  voxel.setInputCloud(globalMap.makeShared());
+  voxel.setLeafSize(globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_);
+  voxel.filter(globalMap);
+
+  // 保存点云到文件
   pcl::io::savePCDFile(global_map_saving_filename_, globalMap);
 }
-
 
 /*
  * Saving global elevation map to output file
  */
 void GlobalManager::savingElevationMap()
 {
+
+  // 检查路径是否存在，不存在则创建
+  boost::filesystem::path dir(elevation_map_saving_filename_);
+  if (!boost::filesystem::exists(dir.parent_path())) {
+    boost::filesystem::create_directories(dir.parent_path());
+  }
   ROS_INFO("Saving Elevation Map to %s", elevation_map_saving_filename_.c_str());
   if(merged_map.size() > 0){
     pcl::io::savePCDFile(elevation_map_saving_filename_, merged_map);
@@ -187,6 +348,11 @@ void GlobalManager::savingElevationMap()
  */
 void GlobalManager::savingPoseGraph()
 {
+  // 检查路径是否存在，不存在则创建
+  boost::filesystem::path dir(pg_saving_filename_);
+  if (!boost::filesystem::exists(dir.parent_path())) {
+    boost::filesystem::create_directories(dir.parent_path());
+  }
   ROS_INFO("Saving Pose Graph to %s", pg_saving_filename_.c_str());
   
   // Get the graph
@@ -217,6 +383,12 @@ void GlobalManager::savingPoseGraph()
  */
 void GlobalManager::savingKeyframes(Values fullInitial)
 {
+  // 检查路径是否存在，不存在则创建
+  boost::filesystem::path dir(keyframe_saving_dir_);
+  if (!boost::filesystem::exists(dir)) {
+    boost::filesystem::create_directories(dir);
+  }
+
   ROS_INFO("Saving Keyframe pointcloud to %s", keyframe_saving_dir_.c_str());
 
   // Check format
