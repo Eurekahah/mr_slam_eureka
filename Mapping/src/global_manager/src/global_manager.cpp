@@ -24,17 +24,17 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   private_nh.param("manual_robots_config", manualRobotConfig_, false);
   private_nh.param("enable_elevation_mapping", enableElevationMapping_, false);
 
-  private_nh.param("disco_dim", disco_dim_, 1.0);
+  // private_nh.param("disco_dim", disco_dim_, 1.0);
   private_nh.param("pcm_thresh", pcm_thresh_, 0.01);
-  private_nh.param("icp_iters", icp_iters_, 10.0);
+  // private_nh.param("icp_iters", icp_iters_, 10.0);
   private_nh.param("submap_size", submap_size_, 5.0);
-  private_nh.param("disco_width", disco_width_, 120.0);
+  // private_nh.param("disco_width", disco_width_, 120.0);
   private_nh.param("start_robot_id", start_robot_id_, 1.0);
-  private_nh.param("disco_height", disco_height_, 40.0);
+  // private_nh.param("disco_height", disco_height_, 40.0);
   private_nh.param("composing_rate", composing_rate_, 1.0);
   private_nh.param("tf_publish_rate", tf_publish_rate_, 1.0);
-  private_nh.param("icp_filter_size", icp_filter_size_, 0.4);
-  private_nh.param("loop_detection_rate", loop_detection_rate_, 10.0);
+  // private_nh.param("icp_filter_size", icp_filter_size_, 0.4);
+  // private_nh.param("loop_detection_rate", loop_detection_rate_, 10.0);
   private_nh.param("pose_graph_pub_rate", pose_graph_pub_rate_, 10.0);
   private_nh.param("submap_voxel_leaf_size", submap_voxel_leaf_size_, 0.3);
   private_nh.param("globalmap_voxel_leaf_size", globalmap_voxel_leaf_size_, 0.3);
@@ -47,7 +47,7 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   private_nh.param<std::string>("pose_graph_topic", pose_graph_topic, "graph");
   private_nh.param<std::string>("manual_config_dir", manual_config_dir_, "./");
   private_nh.param<std::string>("submap_topic", robot_submap_topic_, "submap");
-  private_nh.param<std::string>("descriptor_topic", robot_disco_topic_, "disco");
+  // private_nh.param<std::string>("descriptor_topic", robot_disco_topic_, "disco");
   private_nh.param<std::string>("keyframe_pc_topic", keyframe_pc_topic_, "keyframe");
   private_nh.param<std::string>("registration_method", registration_method_, "FAST_GICP");
   private_nh.param<std::string>("merged_elevation_map_topic", merged_elevation_map_topic, "map");
@@ -58,11 +58,11 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   private_nh.param<std::string>("elevation_map_saving_filename", elevation_map_saving_filename_, "./globalMap.pcd");
   private_nh.param<std::string>("global_map_saving_filename", global_map_saving_filename_, "./globalMap.pcd");
 
-  private_nh.param("DiSCO_dist_thres", DISCO_DIST_THRES, 3.0);
-  private_nh.param("icp_fitness_score", acceptedKeyframeFitnessScore, 0.9);
+  // private_nh.param("DiSCO_dist_thres", DISCO_DIST_THRES, 3.0);
+  // private_nh.param("icp_fitness_score", acceptedKeyframeFitnessScore, 0.9);
 
   NUM_CANDIDATES_FROM_TREE = (int)keyframe_search_candidates_;
-  DISCO_DIM = (int)disco_dim_;
+  // DISCO_DIM = (int)disco_dim_;
 
   /* Publishing */
   merged_elevation_map_publisher_ = node_.advertise<PointCloud>(merged_elevation_map_topic, 10);
@@ -88,9 +88,9 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   // Initialize some variables
   loop_num = 0;
   disco_ind = 0;
-  kdtree = kdtree_init(DISCO_DIM);
-  kdtreeHistoryKeyPoses.reset(new pcl::KdTreeFLANN<PointTI>());
-  kdtreeHistoryKeyPoses6D.reset(new pcl::KdTreeFLANN<PointTypePose>());
+  // kdtree = kdtree_init(DISCO_DIM);
+  // kdtreeHistoryKeyPoses.reset(new pcl::KdTreeFLANN<PointTI>());
+  // kdtreeHistoryKeyPoses6D.reset(new pcl::KdTreeFLANN<PointTypePose>());
 
   initGraphNodeMarkers(trajMarker_, global_map_frame_);
   initGraphEdgeMarkers(loopEdgeMarker_, global_map_frame_);
@@ -593,12 +593,12 @@ void GlobalManager::discovery()
       });
 
       /* subscribe disco callbacks */
-      disco_topic = ros::names::append(robot_name, robot_disco_topic_);
-      ROS_INFO("\033[1;33m Subscribing to DiSCO topic: %s \033[0m", disco_topic.c_str());
-      subscription.disco_sub = node_.subscribe<dislam_msgs::DiSCO>(
-          disco_topic, 10, [this, &subscription](const dislam_msgs::DiSCOConstPtr& msg) {
-            discoUpdate(msg, subscription);
-      });
+      // disco_topic = ros::names::append(robot_name, robot_disco_topic_);
+      // ROS_INFO("\033[1;33m Subscribing to DiSCO topic: %s \033[0m", disco_topic.c_str());
+      // subscription.disco_sub = node_.subscribe<dislam_msgs::DiSCO>(
+      //     disco_topic, 10, [this, &subscription](const dislam_msgs::DiSCOConstPtr& msg) {
+      //       discoUpdate(msg, subscription);
+      // });
 
       /* publish previous keyframe */
       keyframe_topic = ros::names::append(robot_name, keyframe_pc_topic_);
@@ -617,50 +617,50 @@ void GlobalManager::discovery()
 /*
  * !!!Deprecated. Interface Demo. Thread to get init map.
  */
-void GlobalManager::initMapProcessThread()
-{
-  ros::Rate rate(10.0);
-  while(ros::ok()){
-    rate.sleep();
+// void GlobalManager::initMapProcessThread()
+// {
+//   ros::Rate rate(10.0);
+//   while(ros::ok()){
+//     rate.sleep();
 
-    auto start = system_clock::now();
+//     auto start = system_clock::now();
     
-    getInitMaps();
+//     getInitMaps();
     
-    auto end = system_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    // ROS_DEBUG("publishTF: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
-  }
-  ROS_ERROR("ROS down !!!");
-}
+//     auto end = system_clock::now();
+//     auto duration = duration_cast<microseconds>(end - start);
+//     // ROS_DEBUG("publishTF: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
+//   }
+//   ROS_ERROR("ROS down !!!");
+// }
 
 
 /*
  * !!!Deprecated. Interface Demo. Call service to get init map.
  */
-void GlobalManager::getInitMaps()
-{
-  // lock and check every robots init state
-  std::unique_lock<std::mutex> lock(subscriptions_mutex_);
-  for(auto& subscription: subscriptions_){
-    std::lock_guard<std::mutex> lock2(subscription.mutex);
-    dislam_msgs::GetInitMap srv;
-    if(subscription.initState){
-      srv.request.initState = subscription.initState;
-      if (subscription.init_map_client_.call(srv)){
-        ROS_INFO("Get initMap");
-        PointCloudPtr initSubmap(new PointCloud);
-        pcl::fromROSMsg(srv.response.submap, *initSubmap);
+// void GlobalManager::getInitMaps()
+// {
+//   // lock and check every robots init state
+//   std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//   for(auto& subscription: subscriptions_){
+//     std::lock_guard<std::mutex> lock2(subscription.mutex);
+//     dislam_msgs::GetInitMap srv;
+//     if(subscription.initState){
+//       srv.request.initState = subscription.initState;
+//       if (subscription.init_map_client_.call(srv)){
+//         ROS_INFO("Get initMap");
+//         PointCloudPtr initSubmap(new PointCloud);
+//         pcl::fromROSMsg(srv.response.submap, *initSubmap);
         
-      }
-      else{
-        ROS_ERROR("Failed to call service init map");
-      }
-    }
-  }
-  lock.unlock();
+//       }
+//       else{
+//         ROS_ERROR("Failed to call service init map");
+//       }
+//     }
+//   }
+//   lock.unlock();
 
-}
+// }
 
 
 /*
@@ -728,123 +728,123 @@ void GlobalManager::mapComposingThread()
 /*
  * Loop closing thread
  */
-void GlobalManager::loopClosingThread()
-{
-  if(loopClosureEnable_ == false)
-    return;
+// void GlobalManager::loopClosingThread()
+// {
+//   if(loopClosureEnable_ == false)
+//     return;
   
-  ros::Rate rate(loop_detection_rate_);
-  while(ros::ok()){
-    rate.sleep();
+//   ros::Rate rate(loop_detection_rate_);
+//   while(ros::ok()){
+//     rate.sleep();
     
-    auto start = system_clock::now();
+//     auto start = system_clock::now();
     
-    if(!useOtherDescriptor_)
-      performLoopClosure();
+//     if(!useOtherDescriptor_)
+//       performLoopClosure();
       
-    auto end = system_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    ROS_DEBUG("performLoopClosure: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
+//     auto end = system_clock::now();
+//     auto duration = duration_cast<microseconds>(end - start);
+//     ROS_DEBUG("performLoopClosure: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
     
-    auto update_start = system_clock::now();
+//     auto update_start = system_clock::now();
 
-    if(aLoopIsClosed || (loop_num >= 2)){
-      auto correct_start = system_clock::now();
+//     if(aLoopIsClosed || (loop_num >= 2)){
+//       auto correct_start = system_clock::now();
       
-      std::pair<Values, vector<int>> correctedPosePair = correctPoses();
+//       std::pair<Values, vector<int>> correctedPosePair = correctPoses();
       
-      auto correct_end = system_clock::now();
-      auto correct_duration = duration_cast<microseconds>(correct_end - correct_start);
-      ROS_INFO("correctPoses: %lfs", double(correct_duration.count()) * microseconds::period::num / microseconds::period::den);
+//       auto correct_end = system_clock::now();
+//       auto correct_duration = duration_cast<microseconds>(correct_end - correct_start);
+//       ROS_INFO("correctPoses: %lfs", double(correct_duration.count()) * microseconds::period::num / microseconds::period::den);
       
-      updateTransform(correctedPosePair);
-      mapNeedsToBeCorrected = true;
-      keyframeUpdated = false;
-    }
+//       updateTransform(correctedPosePair);
+//       mapNeedsToBeCorrected = true;
+//       keyframeUpdated = false;
+//     }
     
-    auto update_end = system_clock::now();
-    auto update_duration = duration_cast<microseconds>(update_end - update_start);
-    ROS_DEBUG("updateTransform: %lfs", double(update_duration.count()) * microseconds::period::num / microseconds::period::den);
-  }
-  ROS_ERROR("ROS down !!!");
-}
+//     auto update_end = system_clock::now();
+//     auto update_duration = duration_cast<microseconds>(update_end - update_start);
+//     ROS_DEBUG("updateTransform: %lfs", double(update_duration.count()) * microseconds::period::num / microseconds::period::den);
+//   }
+//   ROS_ERROR("ROS down !!!");
+// }
 
 
 /*
  * Perform geometry check in queue
  */
-void GlobalManager::geometryCheckThread()
-{
-  // ros::Rate rate(loop_detection_rate_);
-  while(1){
-    // rate.sleep();
-    auto start = system_clock::now();
+// void GlobalManager::geometryCheckThread()
+// {
+//   // ros::Rate rate(loop_detection_rate_);
+//   while(1){
+//     // rate.sleep();
+//     auto start = system_clock::now();
     
-    if(!loops_buf.empty())
-    {
-      auto interloop = loops_buf.front();
+//     if(!loops_buf.empty())
+//     {
+//       auto interloop = loops_buf.front();
 
-      uint64_t id1 = std::get<0>(interloop);
-      uint64_t id2 = std::get<1>(interloop);
-      Eigen::Isometry3d initPose = std::get<2>(interloop);
+//       uint64_t id1 = std::get<0>(interloop);
+//       uint64_t id2 = std::get<1>(interloop);
+//       Eigen::Isometry3d initPose = std::get<2>(interloop);
 
-      // ICP check, return icp fitness score with transform matrix
-      auto icpResult = ICPCheck(id1, id2, initPose);
+//       // ICP check, return icp fitness score with transform matrix
+//       auto icpResult = ICPCheck(id1, id2, initPose);
 
-      float icpFitnessScore = icpResult.first;
-      if(icpFitnessScore == 0){
-        continue;
-      }else if(icpFitnessScore == -1){
-        loops_buf.pop();
-        auto end = system_clock::now();
-        auto duration = duration_cast<microseconds>(end - start);
-        ROS_WARN("geometry check: %lfs, with queue %d left!", double(duration.count()) * microseconds::period::num / microseconds::period::den, loops_buf.size());
-        continue;
-      }
+//       float icpFitnessScore = icpResult.first;
+//       if(icpFitnessScore == 0){
+//         continue;
+//       }else if(icpFitnessScore == -1){
+//         loops_buf.pop();
+//         auto end = system_clock::now();
+//         auto duration = duration_cast<microseconds>(end - start);
+//         ROS_WARN("geometry check: %lfs, with queue %d left!", double(duration.count()) * microseconds::period::num / microseconds::period::den, loops_buf.size());
+//         continue;
+//       }
 
-      // icp pose is the inverse of relative pose
-      Pose3 finalPose3 = icpResult.second;
-      finalPose3 = finalPose3.inverse();
+//       // icp pose is the inverse of relative pose
+//       Pose3 finalPose3 = icpResult.second;
+//       finalPose3 = finalPose3.inverse();
 
-      double loopNoiseScore = 0.5; // constant is ok...
-      gtsam::Vector robustNoiseVector6(6); // gtsam::Pose3 factor has 6 elements (6D)
-      robustNoiseVector6 << loopNoiseScore, loopNoiseScore, loopNoiseScore, loopNoiseScore, loopNoiseScore, loopNoiseScore;
-      noiseModel::Base::shared_ptr robustLoopNoise;
-      robustLoopNoise = gtsam::noiseModel::Robust::Create(
-                      gtsam::noiseModel::mEstimator::GemanMcClure::Create(1), // optional: replacing Cauchy by DCS or GemanMcClure is okay but Cauchy is empirically good.
-                      gtsam::noiseModel::Diagonal::Variances(robustNoiseVector6) );
+//       double loopNoiseScore = 0.5; // constant is ok...
+//       gtsam::Vector robustNoiseVector6(6); // gtsam::Pose3 factor has 6 elements (6D)
+//       robustNoiseVector6 << loopNoiseScore, loopNoiseScore, loopNoiseScore, loopNoiseScore, loopNoiseScore, loopNoiseScore;
+//       noiseModel::Base::shared_ptr robustLoopNoise;
+//       robustLoopNoise = gtsam::noiseModel::Robust::Create(
+//                       gtsam::noiseModel::mEstimator::GemanMcClure::Create(1), // optional: replacing Cauchy by DCS or GemanMcClure is okay but Cauchy is empirically good.
+//                       gtsam::noiseModel::Diagonal::Variances(robustNoiseVector6) );
       
-      if(id1 < id2){
-        NonlinearFactor::shared_ptr interRobotFactorID1(new BetweenFactor<Pose3>(id1, id2, finalPose3, loopNoise));
-        graphAndValuesVec[Key2robotID(id1)].first->push_back(interRobotFactorID1);
-        graphAndValuesVec[Key2robotID(id2)].first->push_back(interRobotFactorID1);
-        // Add to graph visualization
-        cout << " add edge into current graph " << Key2robotID(id2) << endl;
-        std::pair<uint64_t, uint64_t> edge = make_pair(id1, id2);
-        loopEdgePairs_.push_back(edge);
-        loop_num++;
-      }else{
-        NonlinearFactor::shared_ptr interRobotFactorID2(new BetweenFactor<Pose3>(id2, id1, finalPose3.inverse(), loopNoise));
-        graphAndValuesVec[Key2robotID(id1)].first->push_back(interRobotFactorID2);
-        graphAndValuesVec[Key2robotID(id2)].first->push_back(interRobotFactorID2);
-        // Add to graph visualization
-        cout << " add edge into current graph inverse id2: " << id2 << " id1: " << id1 << endl;
-        std::pair<uint64_t, uint64_t> edge = make_pair(id2, id1);
-        loopEdgePairs_.push_back(edge);
-        loop_num++;
-      }
-      loops_buf.pop();
+//       if(id1 < id2){
+//         NonlinearFactor::shared_ptr interRobotFactorID1(new BetweenFactor<Pose3>(id1, id2, finalPose3, loopNoise));
+//         graphAndValuesVec[Key2robotID(id1)].first->push_back(interRobotFactorID1);
+//         graphAndValuesVec[Key2robotID(id2)].first->push_back(interRobotFactorID1);
+//         // Add to graph visualization
+//         cout << " add edge into current graph " << Key2robotID(id2) << endl;
+//         std::pair<uint64_t, uint64_t> edge = make_pair(id1, id2);
+//         loopEdgePairs_.push_back(edge);
+//         loop_num++;
+//       }else{
+//         NonlinearFactor::shared_ptr interRobotFactorID2(new BetweenFactor<Pose3>(id2, id1, finalPose3.inverse(), loopNoise));
+//         graphAndValuesVec[Key2robotID(id1)].first->push_back(interRobotFactorID2);
+//         graphAndValuesVec[Key2robotID(id2)].first->push_back(interRobotFactorID2);
+//         // Add to graph visualization
+//         cout << " add edge into current graph inverse id2: " << id2 << " id1: " << id1 << endl;
+//         std::pair<uint64_t, uint64_t> edge = make_pair(id2, id1);
+//         loopEdgePairs_.push_back(edge);
+//         loop_num++;
+//       }
+//       loops_buf.pop();
           
-      if(loop_num >= 2)
-        aLoopIsClosed = true;
+//       if(loop_num >= 2)
+//         aLoopIsClosed = true;
 
-      auto end = system_clock::now();
-      auto duration = duration_cast<microseconds>(end - start);
-      ROS_WARN("geometry check: %lfs, with queue %d left!", double(duration.count()) * microseconds::period::num / microseconds::period::den, loops_buf.size());
-    }
-  }
-  ROS_ERROR("ROS down !!!");
-}
+//       auto end = system_clock::now();
+//       auto duration = duration_cast<microseconds>(end - start);
+//       ROS_WARN("geometry check: %lfs, with queue %d left!", double(duration.count()) * microseconds::period::num / microseconds::period::den, loops_buf.size());
+//     }
+//   }
+//   ROS_ERROR("ROS down !!!");
+// }
 
 
 /**
@@ -937,428 +937,428 @@ void GlobalManager::processLoopClosureWithInitials(const dislam_msgs::LoopsConst
 /*
  * Loop detection and check its validation. If true loop, then add loop factor to the graph
  */
-void GlobalManager::performLoopClosure()
-{
-  ROS_DEBUG("Performing Loop Closure.");
+// void GlobalManager::performLoopClosure()
+// {
+//   ROS_DEBUG("Performing Loop Closure.");
 
-  // Index represents robotid, content represents the robot newest desc
-  DiSCOVec query_desc;
-  DiSCOFFTVec query_fft;
-  // Index represents robotid, content represents the looped robotids and its correspoinding disco index 
-  std::vector<std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>>> loopAllInfo;
-  // Current descriptor's index in disco_database, index represents robotid, content represents the disco index
-  std::vector<int> curr_ind;
-  std::vector<int> curr_id;
+//   // Index represents robotid, content represents the robot newest desc
+//   DiSCOVec query_desc;
+//   DiSCOFFTVec query_fft;
+//   // Index represents robotid, content represents the looped robotids and its correspoinding disco index 
+//   std::vector<std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>>> loopAllInfo;
+//   // Current descriptor's index in disco_database, index represents robotid, content represents the disco index
+//   std::vector<int> curr_ind;
+//   std::vector<int> curr_id;
 
-  if(nrRobots == 0)
-    return;
+//   if(nrRobots == 0)
+//     return;
   
-  // Copy every robot newest desc to a local variable
-  std::unique_lock<std::mutex> lock(subscriptions_mutex_);
-  for(auto& subscription: subscriptions_){
-    std::lock_guard<std::mutex> lock2(subscription.mutex);
+//   // Copy every robot newest desc to a local variable
+//   std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//   for(auto& subscription: subscriptions_){
+//     std::lock_guard<std::mutex> lock2(subscription.mutex);
     
-    if(subscription.disco_base.size() < 2 || subscription.submaps.size() < 2)
-      return;
+//     if(subscription.disco_base.size() < 2 || subscription.submaps.size() < 2)
+//       return;
 
-    if(subscription.disco_base.size() > subscription.submaps.size()){// sync reason: keyframe and disco are not always synchronized
-      DiSCOFFT curr_fft;
-      std::vector<float> curr_desc;
-      curr_desc = subscription.disco_base[subscription.submaps.size() - 2]; 
-      curr_fft = subscription.disco_fft[subscription.submaps.size() - 2]; 
-      query_fft.push_back(curr_fft);
-      query_desc.push_back(curr_desc);
-      curr_ind.push_back(subscription.submaps.size() - 2);
-      curr_id.push_back(subscription.robot_id);
-    }else{
-      DiSCOFFT curr_fft;
-      std::vector<float> curr_desc;
-      curr_desc = subscription.disco_base.back();
-      curr_fft = subscription.disco_fft.back();
-      query_fft.push_back(curr_fft);
-      query_desc.push_back(curr_desc);
-      curr_ind.push_back(subscription.submaps.size() - 1);
-      curr_id.push_back(subscription.robot_id);
-    }
-  }
+//     if(subscription.disco_base.size() > subscription.submaps.size()){// sync reason: keyframe and disco are not always synchronized
+//       DiSCOFFT curr_fft;
+//       std::vector<float> curr_desc;
+//       curr_desc = subscription.disco_base[subscription.submaps.size() - 2]; 
+//       curr_fft = subscription.disco_fft[subscription.submaps.size() - 2]; 
+//       query_fft.push_back(curr_fft);
+//       query_desc.push_back(curr_desc);
+//       curr_ind.push_back(subscription.submaps.size() - 2);
+//       curr_id.push_back(subscription.robot_id);
+//     }else{
+//       DiSCOFFT curr_fft;
+//       std::vector<float> curr_desc;
+//       curr_desc = subscription.disco_base.back();
+//       curr_fft = subscription.disco_fft.back();
+//       query_fft.push_back(curr_fft);
+//       query_desc.push_back(curr_desc);
+//       curr_ind.push_back(subscription.submaps.size() - 1);
+//       curr_id.push_back(subscription.robot_id);
+//     }
+//   }
 
-  // Because the forward_list insert from the front
-  reverse(curr_ind.begin(), curr_ind.end());
-  reverse(query_fft.begin(), query_fft.end());
-  reverse(query_desc.begin(), query_desc.end());
-  lock.unlock();
+//   // Because the forward_list insert from the front
+//   reverse(curr_ind.begin(), curr_ind.end());
+//   reverse(query_fft.begin(), query_fft.end());
+//   reverse(query_desc.begin(), query_desc.end());
+//   lock.unlock();
   
-  // Every newest descriptor to detect inter loop closure
-  for(int i = 0; i < query_desc.size(); i++){
-    auto result = detectLoopClosure(query_desc[i], query_fft[i], curr_ind[i], i);
-    loopAllInfo.push_back(result);
-  }
+//   // Every newest descriptor to detect inter loop closure
+//   for(int i = 0; i < query_desc.size(); i++){
+//     auto result = detectLoopClosure(query_desc[i], query_fft[i], curr_ind[i], i);
+//     loopAllInfo.push_back(result);
+//   }
 
-  float noiseScore = 1; // constant is ok...
-  gtsam::Vector Vector6(6);
-  float x, y, z, icp_roll, icp_pitch, icp_yaw;
-  Eigen::Affine3f correctionKeyframe;
-  Vector6 << noiseScore, noiseScore, noiseScore, noiseScore, noiseScore, noiseScore;
-  constraintNoise = noiseModel::Diagonal::Variances(Vector6);
-  robustNoiseModel = gtsam::noiseModel::Robust::Create(
-              gtsam::noiseModel::mEstimator::Cauchy::Create(1), // optional: replacing Cauchy by DCS or GemanMcClure
-              gtsam::noiseModel::Diagonal::Variances(Vector6)
-          ); // - checked it works. but with robust kernel, map modification may be delayed (i.e,. requires more true-positive loop factors)
+//   float noiseScore = 1; // constant is ok...
+//   gtsam::Vector Vector6(6);
+//   float x, y, z, icp_roll, icp_pitch, icp_yaw;
+//   Eigen::Affine3f correctionKeyframe;
+//   Vector6 << noiseScore, noiseScore, noiseScore, noiseScore, noiseScore, noiseScore;
+//   constraintNoise = noiseModel::Diagonal::Variances(Vector6);
+//   robustNoiseModel = gtsam::noiseModel::Robust::Create(
+//               gtsam::noiseModel::mEstimator::Cauchy::Create(1), // optional: replacing Cauchy by DCS or GemanMcClure
+//               gtsam::noiseModel::Diagonal::Variances(Vector6)
+//           ); // - checked it works. but with robust kernel, map modification may be delayed (i.e,. requires more true-positive loop factors)
 
-  // Iter all loop info
-  for(auto loopInfo = loopAllInfo.begin(); loopInfo != loopAllInfo.end(); loopInfo++){
+//   // Iter all loop info
+//   for(auto loopInfo = loopAllInfo.begin(); loopInfo != loopAllInfo.end(); loopInfo++){
 
-    PointCloudIPtr currentKeyframe(new PointCloudI);
-    int currentRobotIDinStack = loopInfo - loopAllInfo.begin();
-    int currentDiSCOID = curr_ind[currentRobotIDinStack];
-    int realRobotID = robotIDStack[currentRobotIDinStack];
+//     PointCloudIPtr currentKeyframe(new PointCloudI);
+//     int currentRobotIDinStack = loopInfo - loopAllInfo.begin();
+//     int currentDiSCOID = curr_ind[currentRobotIDinStack];
+//     int realRobotID = robotIDStack[currentRobotIDinStack];
 
-    std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
-    auto currentRobotHandle = subscriptions_.begin();
-    std::advance(currentRobotHandle, nrRobots - currentRobotIDinStack - 1);
-    pcl::copyPointCloud(*currentRobotHandle->keyframes[currentDiSCOID], *currentKeyframe);
-    auto currentYaw = currentRobotHandle->cloudKeyPoses6D->points.back().yaw;
-    obslock.unlock();
+//     std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
+//     auto currentRobotHandle = subscriptions_.begin();
+//     std::advance(currentRobotHandle, nrRobots - currentRobotIDinStack - 1);
+//     pcl::copyPointCloud(*currentRobotHandle->keyframes[currentDiSCOID], *currentKeyframe);
+//     auto currentYaw = currentRobotHandle->cloudKeyPoses6D->points.back().yaw;
+//     obslock.unlock();
 
-    bool isValidloopFactor = false;
-    auto interLoopRobots = std::get<0>(*loopInfo); // robot index
-    auto interDiscoIndex = std::get<1>(*loopInfo);  // disco index for each robot
-    auto relPoses = std::get<2>(*loopInfo);  // disco index for each robot
+//     bool isValidloopFactor = false;
+//     auto interLoopRobots = std::get<0>(*loopInfo); // robot index
+//     auto interDiscoIndex = std::get<1>(*loopInfo);  // disco index for each robot
+//     auto relPoses = std::get<2>(*loopInfo);  // disco index for each robot
 
-    // use ICP result to check validation of each loop
-    auto start = system_clock::now();
-    for(auto i = 0; i < interLoopRobots.size(); i++){
-      int interLoopRobotIDinStack = interLoopRobots[i];
-      int queryDiSCOIndex = interDiscoIndex[i];
-      int realInterLoopRobotID = robotIDStack[interLoopRobotIDinStack];
+//     // use ICP result to check validation of each loop
+//     auto start = system_clock::now();
+//     for(auto i = 0; i < interLoopRobots.size(); i++){
+//       int interLoopRobotIDinStack = interLoopRobots[i];
+//       int queryDiSCOIndex = interDiscoIndex[i];
+//       int realInterLoopRobotID = robotIDStack[interLoopRobotIDinStack];
 
-      if(interLoopRobotIDinStack != -1 && relPoses[i].intensity != -1 && currentRobotIDinStack != interLoopRobotIDinStack){// && (currentRobotIDinStack != interLoopRobotIDinStack || (currentRobotIDinStack == interLoopRobotIDinStack && abs(currentDiSCOID - queryDiSCOIndex) > 2 ))){ // check the validation of the info, discard consecutive loops
-        cout << "ICP check between robot " << realRobotID << " des: " << currentDiSCOID << " and robot " << realInterLoopRobotID << " des: " << queryDiSCOIndex << endl;
+//       if(interLoopRobotIDinStack != -1 && relPoses[i].intensity != -1 && currentRobotIDinStack != interLoopRobotIDinStack){// && (currentRobotIDinStack != interLoopRobotIDinStack || (currentRobotIDinStack == interLoopRobotIDinStack && abs(currentDiSCOID - queryDiSCOIndex) > 2 ))){ // check the validation of the info, discard consecutive loops
+//         cout << "ICP check between robot " << realRobotID << " des: " << currentDiSCOID << " and robot " << realInterLoopRobotID << " des: " << queryDiSCOIndex << endl;
         
-        // Get query keyframe 
-        std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
-        PointCloudIPtr queryKeyframe(new PointCloudI);       
-        PointCloudIPtr queryKeyframeTransformed(new PointCloudI);        
-        auto interLoopRobotHandle = subscriptions_.begin();
-        std::advance(interLoopRobotHandle, nrRobots - interLoopRobotIDinStack - 1);
-        pcl::copyPointCloud(*interLoopRobotHandle->keyframes[queryDiSCOIndex], *queryKeyframe);
-        obslock.unlock();
-        auto start = system_clock::now();
+//         // Get query keyframe 
+//         std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
+//         PointCloudIPtr queryKeyframe(new PointCloudI);       
+//         PointCloudIPtr queryKeyframeTransformed(new PointCloudI);        
+//         auto interLoopRobotHandle = subscriptions_.begin();
+//         std::advance(interLoopRobotHandle, nrRobots - interLoopRobotIDinStack - 1);
+//         pcl::copyPointCloud(*interLoopRobotHandle->keyframes[queryDiSCOIndex], *queryKeyframe);
+//         obslock.unlock();
+//         auto start = system_clock::now();
 
-        // DiSCO get the relative angle between two scans
-        float relative_x = relPoses[i].x*cos(currentYaw) + relPoses[i].y*sin(currentYaw);
-        float relative_y = -relPoses[i].x*sin(currentYaw) + relPoses[i].y*cos(currentYaw);
+//         // DiSCO get the relative angle between two scans
+//         float relative_x = relPoses[i].x*cos(currentYaw) + relPoses[i].y*sin(currentYaw);
+//         float relative_y = -relPoses[i].x*sin(currentYaw) + relPoses[i].y*cos(currentYaw);
 
-        Eigen::Isometry3f T = Pose3toIsometry(Pose3(Rot3::RzRyRx(0.0, 0.0, -relPoses[i].intensity / 180.0 * M_PI), Point3(-relative_x, -relative_y, 0.0)));
-        Eigen::Matrix4f transformMatrix = T.matrix();
-        pcl::transformPointCloud(*queryKeyframe, *queryKeyframeTransformed, transformMatrix); 
+//         Eigen::Isometry3f T = Pose3toIsometry(Pose3(Rot3::RzRyRx(0.0, 0.0, -relPoses[i].intensity / 180.0 * M_PI), Point3(-relative_x, -relative_y, 0.0)));
+//         Eigen::Matrix4f transformMatrix = T.matrix();
+//         pcl::transformPointCloud(*queryKeyframe, *queryKeyframeTransformed, transformMatrix); 
 
-        cout << "relative angle: " << relPoses[i].intensity << " relative_x: " << relative_x << " relative y: " << relative_y << " relative z: " << relPoses[i].z << endl;
+//         cout << "relative angle: " << relPoses[i].intensity << " relative_x: " << relative_x << " relative y: " << relative_y << " relative z: " << relPoses[i].z << endl;
 
-        auto end = system_clock::now();
-        auto duration = duration_cast<microseconds>(end - start);
-        start = system_clock::now();
+//         auto end = system_clock::now();
+//         auto duration = duration_cast<microseconds>(end - start);
+//         start = system_clock::now();
 
-        pcl::IterativeClosestPoint<PointTI, PointTI> icp;
-        icp.setMaxCorrespondenceDistance(2.0);
-        icp.setMaximumIterations((int)icp_iters_);
-        icp.setTransformationEpsilon(1e-3);
-        icp.setEuclideanFitnessEpsilon(1e-3);
-        icp.setInputSource(currentKeyframe);
-        icp.setInputTarget(queryKeyframeTransformed);
-        PointCloudIPtr unused_result(new PointCloudI);
-        icp.align(*unused_result); 
+//         pcl::IterativeClosestPoint<PointTI, PointTI> icp;
+//         icp.setMaxCorrespondenceDistance(2.0);
+//         icp.setMaximumIterations((int)icp_iters_);
+//         icp.setTransformationEpsilon(1e-3);
+//         icp.setEuclideanFitnessEpsilon(1e-3);
+//         icp.setInputSource(currentKeyframe);
+//         icp.setInputTarget(queryKeyframeTransformed);
+//         PointCloudIPtr unused_result(new PointCloudI);
+//         icp.align(*unused_result); 
 
-        end = system_clock::now();
-        duration = duration_cast<microseconds>(end - start);
-        cout <<  "ICP align spend " << double(duration.count()) * microseconds::period::num / microseconds::period::den << "s" << endl;
-        cout << "[DSC] ICP fit score: " << icp.getFitnessScore() << endl;
+//         end = system_clock::now();
+//         duration = duration_cast<microseconds>(end - start);
+//         cout <<  "ICP align spend " << double(duration.count()) * microseconds::period::num / microseconds::period::den << "s" << endl;
+//         cout << "[DSC] ICP fit score: " << icp.getFitnessScore() << endl;
         
-        // check ICP result
-        if ( icp.hasConverged() == false || icp.getFitnessScore() > acceptedKeyframeFitnessScore ) {
-          std::cout << "[DSC] Reject this loop (bad icp fit score, > " << acceptedKeyframeFitnessScore << ")" << std::endl;
-          isValidloopFactor = false;
-        }
-        else {
-          std::cout << "[DSC] The detected loop factor is added between Robot " << realRobotID 
-                    << " keyframe id: [ " << currentDiSCOID << " ] and nearest Robot " << realInterLoopRobotID 
-                    << " keyframe id:  [ " << queryDiSCOIndex << " ]" << std::endl;
+//         // check ICP result
+//         if ( icp.hasConverged() == false || icp.getFitnessScore() > acceptedKeyframeFitnessScore ) {
+//           std::cout << "[DSC] Reject this loop (bad icp fit score, > " << acceptedKeyframeFitnessScore << ")" << std::endl;
+//           isValidloopFactor = false;
+//         }
+//         else {
+//           std::cout << "[DSC] The detected loop factor is added between Robot " << realRobotID 
+//                     << " keyframe id: [ " << currentDiSCOID << " ] and nearest Robot " << realInterLoopRobotID 
+//                     << " keyframe id:  [ " << queryDiSCOIndex << " ]" << std::endl;
 
-          isValidloopFactor = true;
-        }
+//           isValidloopFactor = true;
+//         }
         
-        // Add factors to graph
-        if( isValidloopFactor ) {
-          correctionKeyframe = icp.getFinalTransformation(); // get transformation in camera frame (because points are in camera frame)
-          pcl::getTranslationAndEulerAngles (correctionKeyframe, x, y, z, icp_roll, icp_pitch, icp_yaw);
-          cout << "origin icp_yaw: " << icp_yaw / M_PI * 180.0 << " x: " << x << " y: " << y << endl;
+//         // Add factors to graph
+//         if( isValidloopFactor ) {
+//           correctionKeyframe = icp.getFinalTransformation(); // get transformation in camera frame (because points are in camera frame)
+//           pcl::getTranslationAndEulerAngles (correctionKeyframe, x, y, z, icp_roll, icp_pitch, icp_yaw);
+//           cout << "origin icp_yaw: " << icp_yaw / M_PI * 180.0 << " x: " << x << " y: " << y << endl;
 
-          uint64_t id1, id2;
-          // need to +1 because the Index begin at 1
-          id1 = robotID2Key(realRobotID-start_robot_id_) + currentDiSCOID + 1;
-          id2 = robotID2Key(realInterLoopRobotID-start_robot_id_) + queryDiSCOIndex + 1; 
+//           uint64_t id1, id2;
+//           // need to +1 because the Index begin at 1
+//           id1 = robotID2Key(realRobotID-start_robot_id_) + currentDiSCOID + 1;
+//           id2 = robotID2Key(realInterLoopRobotID-start_robot_id_) + queryDiSCOIndex + 1; 
 
-          // Need to compensate the relative angle
-          Eigen::Affine3f relMatrix = Eigen::Affine3f::Identity();
-          double theta = -relPoses[i].intensity / 180.0 * M_PI;  // The angle of rotation in radians
-          relMatrix(0, 0) = std::cos (theta);
-          relMatrix(0, 1) = sin (theta);
-          relMatrix(1, 0) = -sin (theta);
-          relMatrix(1, 1) = std::cos (theta);
-          correctionKeyframe = relMatrix * correctionKeyframe;
-          pcl::getTranslationAndEulerAngles (correctionKeyframe, x, y, z, icp_roll, icp_pitch, icp_yaw);
-          cout << "icp_yaw: " << icp_yaw / M_PI * 180.0 << " x: " << x << " y: " << y << endl;
+//           // Need to compensate the relative angle
+//           Eigen::Affine3f relMatrix = Eigen::Affine3f::Identity();
+//           double theta = -relPoses[i].intensity / 180.0 * M_PI;  // The angle of rotation in radians
+//           relMatrix(0, 0) = std::cos (theta);
+//           relMatrix(0, 1) = sin (theta);
+//           relMatrix(1, 0) = -sin (theta);
+//           relMatrix(1, 1) = std::cos (theta);
+//           correctionKeyframe = relMatrix * correctionKeyframe;
+//           pcl::getTranslationAndEulerAngles (correctionKeyframe, x, y, z, icp_roll, icp_pitch, icp_yaw);
+//           cout << "icp_yaw: " << icp_yaw / M_PI * 180.0 << " x: " << x << " y: " << y << endl;
 
-          gtsam::Pose3 poseFrom = Pose3(Rot3::RzRyRx(icp_roll, icp_pitch, icp_yaw), Point3(x + relative_x, y + relative_y, z));
-          gtsam::Pose3 poseTo = Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0));
+//           gtsam::Pose3 poseFrom = Pose3(Rot3::RzRyRx(icp_roll, icp_pitch, icp_yaw), Point3(x + relative_x, y + relative_y, z));
+//           gtsam::Pose3 poseTo = Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0));
 
-          std::lock_guard<std::mutex> lock(graph_mutex_);
-          std::lock_guard<std::mutex> newGraphLock(new_graph_mutex);
+//           std::lock_guard<std::mutex> lock(graph_mutex_);
+//           std::lock_guard<std::mutex> newGraphLock(new_graph_mutex);
 
-          // Add inter robot factor to the graph
-          {
-            // first id need to be same as the robot stack id. 
-            if(id1 < id2){
-              NonlinearFactor::shared_ptr interRobotFactorID1(new BetweenFactor<Pose3>(id1, id2, poseFrom.between(poseTo), constraintNoise));
-              graphAndValuesVec[realRobotID-start_robot_id_].first->push_back(interRobotFactorID1);
-              graphAndValuesVec[realInterLoopRobotID-start_robot_id_].first->push_back(interRobotFactorID1);
-              // Add to graph visualization
-              cout << " add edge into current graph " << endl;
-              std::pair<uint64_t, uint64_t> edge = make_pair(id1, id2);
-              loopEdgePairs_.push_back(edge);
-            }else{
-              NonlinearFactor::shared_ptr interRobotFactorID2(new BetweenFactor<Pose3>(id2, id1, poseTo.between(poseFrom), constraintNoise));
-              graphAndValuesVec[realRobotID-start_robot_id_].first->push_back(interRobotFactorID2);
-              graphAndValuesVec[realInterLoopRobotID-start_robot_id_].first->push_back(interRobotFactorID2);
-              // Add to graph visualization
-              cout << " add edge into current graph " << endl;
-              std::pair<uint64_t, uint64_t> edge = make_pair(id2, id1);
-              loopEdgePairs_.push_back(edge);
-            }
+//           // Add inter robot factor to the graph
+//           {
+//             // first id need to be same as the robot stack id. 
+//             if(id1 < id2){
+//               NonlinearFactor::shared_ptr interRobotFactorID1(new BetweenFactor<Pose3>(id1, id2, poseFrom.between(poseTo), constraintNoise));
+//               graphAndValuesVec[realRobotID-start_robot_id_].first->push_back(interRobotFactorID1);
+//               graphAndValuesVec[realInterLoopRobotID-start_robot_id_].first->push_back(interRobotFactorID1);
+//               // Add to graph visualization
+//               cout << " add edge into current graph " << endl;
+//               std::pair<uint64_t, uint64_t> edge = make_pair(id1, id2);
+//               loopEdgePairs_.push_back(edge);
+//             }else{
+//               NonlinearFactor::shared_ptr interRobotFactorID2(new BetweenFactor<Pose3>(id2, id1, poseTo.between(poseFrom), constraintNoise));
+//               graphAndValuesVec[realRobotID-start_robot_id_].first->push_back(interRobotFactorID2);
+//               graphAndValuesVec[realInterLoopRobotID-start_robot_id_].first->push_back(interRobotFactorID2);
+//               // Add to graph visualization
+//               cout << " add edge into current graph " << endl;
+//               std::pair<uint64_t, uint64_t> edge = make_pair(id2, id1);
+//               loopEdgePairs_.push_back(edge);
+//             }
 
-            std::cout << "[DSC] Add loop factor into the graph" << std::endl; 
-          }
+//             std::cout << "[DSC] Add loop factor into the graph" << std::endl; 
+//           }
           
-          // Enable loop
-          Eigen::Isometry3f T = Eigen::Isometry3f::Identity();
-          Eigen::Isometry3f IncrementTrans = Eigen::Isometry3f::Identity();
-          if(currentRobotIDinStack != interLoopRobotIDinStack)
-            loop_num++;
-          if(loop_num > 1)
-            aLoopIsClosed = true;
+//           // Enable loop
+//           Eigen::Isometry3f T = Eigen::Isometry3f::Identity();
+//           Eigen::Isometry3f IncrementTrans = Eigen::Isometry3f::Identity();
+//           if(currentRobotIDinStack != interLoopRobotIDinStack)
+//             loop_num++;
+//           if(loop_num > 1)
+//             aLoopIsClosed = true;
 
-        } // check DiSCO validation
-      } // check the validation of the info
-    } // ICP check
+//         } // check DiSCO validation
+//       } // check the validation of the info
+//     } // ICP check
 
-    auto end = system_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    cout <<  "ICP check spend " << double(duration.count()) * microseconds::period::num / microseconds::period::den << "s" << endl;
-  }
-}
+//     auto end = system_clock::now();
+//     auto duration = duration_cast<microseconds>(end - start);
+//     cout <<  "ICP check spend " << double(duration.count()) * microseconds::period::num / microseconds::period::den << "s" << endl;
+//   }
+// }
 
 
 /*
  * Detect loop closure for a robot with its newest descriptor
  * Output: loop robotid and its disco index
  */
-std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>> GlobalManager::detectLoopClosure(std::vector<float> curr_desc, DiSCOFFT curr_fft, int curr_ind, int currentRobotIDinStack)
-{
-  ROS_DEBUG("Detecting Loop Closure.");
-  std::unique_lock<std::mutex> locktree(kdtree_mutex_);
+// std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>> GlobalManager::detectLoopClosure(std::vector<float> curr_desc, DiSCOFFT curr_fft, int curr_ind, int currentRobotIDinStack)
+// {
+//   ROS_DEBUG("Detecting Loop Closure.");
+//   std::unique_lock<std::mutex> locktree(kdtree_mutex_);
   
-  float query[DISCO_DIM];
-  int realRobotID = robotIDStack[currentRobotIDinStack];
+//   float query[DISCO_DIM];
+//   int realRobotID = robotIDStack[currentRobotIDinStack];
 
-  // Dynamic kdtree with insert operation
-  kdtree_build(kdtree);
+//   // Dynamic kdtree with insert operation
+//   kdtree_build(kdtree);
 
-  memcpy(query, &curr_desc[0], curr_desc.size() * sizeof(curr_desc[0]));
-  kdtree_knn_search(kdtree, query, NUM_CANDIDATES_FROM_TREE);
+//   memcpy(query, &curr_desc[0], curr_desc.size() * sizeof(curr_desc[0]));
+//   kdtree_knn_search(kdtree, query, NUM_CANDIDATES_FROM_TREE);
 
-  auto kd_result = kdtree_knn_result(kdtree);
-  locktree.unlock();
+//   auto kd_result = kdtree_knn_result(kdtree);
+//   locktree.unlock();
 
-  // Index represents num candidates, content represents the origin place of the corresponding candidate
-  std::vector<int> discoIndex;
-  std::vector<pcl::PointXYZI> relPoses;  // point.xyz -> relative x y z; point.intensity -> relative yaw
-  std::vector<int> closestRobotID;
+//   // Index represents num candidates, content represents the origin place of the corresponding candidate
+//   std::vector<int> discoIndex;
+//   std::vector<pcl::PointXYZI> relPoses;  // point.xyz -> relative x y z; point.intensity -> relative yaw
+//   std::vector<int> closestRobotID;
 
-  // Skip very first observations
-  if(kdtree->count < 3){
-    std::vector<int> falseReturn;
-    std::vector<pcl::PointXYZI> falseReturnF;
-    pcl::PointXYZI falseReturnP;
-    falseReturnP.x = falseReturnP.y = falseReturnP.z = 0.0;
-    falseReturnP.intensity = -1.0;
-    falseReturn.push_back(-1);
-    falseReturnF.push_back(falseReturnP);
-    std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>> results{falseReturn, falseReturn, falseReturnF};
-    cout << "False return" << endl;
-    return results;
-  }
+//   // Skip very first observations
+//   if(kdtree->count < 3){
+//     std::vector<int> falseReturn;
+//     std::vector<pcl::PointXYZI> falseReturnF;
+//     pcl::PointXYZI falseReturnP;
+//     falseReturnP.x = falseReturnP.y = falseReturnP.z = 0.0;
+//     falseReturnP.intensity = -1.0;
+//     falseReturn.push_back(-1);
+//     falseReturnF.push_back(falseReturnP);
+//     std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>> results{falseReturn, falseReturn, falseReturnF};
+//     cout << "False return" << endl;
+//     return results;
+//   }
 
-  if(odometryLoopEnable_){
-    // Find the multi-agent closest history keyframe
-    std::vector<int> pointSearchIndLoop;
-    std::vector<float> pointSearchSqDisLoop;
-    std::vector<int> traj_cloud_size;
-    pcl::PointCloud<PointTypePose>::Ptr traj_cloud6D(new pcl::PointCloud<PointTypePose>);
+//   if(odometryLoopEnable_){
+//     // Find the multi-agent closest history keyframe
+//     std::vector<int> pointSearchIndLoop;
+//     std::vector<float> pointSearchSqDisLoop;
+//     std::vector<int> traj_cloud_size;
+//     pcl::PointCloud<PointTypePose>::Ptr traj_cloud6D(new pcl::PointCloud<PointTypePose>);
 
-    std::vector<PointTypePose> currentRobotPosPoint6D;
-    std::unique_lock<std::mutex> lock(subscriptions_mutex_);
-    for(auto& subscription: subscriptions_){
-      std::lock_guard<std::mutex> lock2(subscription.mutex);
-      *traj_cloud6D += *subscription.cloudKeyPoses6D;
-      traj_cloud_size.push_back(subscription.cloudKeyPoses6D->size());
-      currentRobotPosPoint6D.push_back(subscription.cloudKeyPoses6D->back());
-    }
-    lock.unlock();
+//     std::vector<PointTypePose> currentRobotPosPoint6D;
+//     std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//     for(auto& subscription: subscriptions_){
+//       std::lock_guard<std::mutex> lock2(subscription.mutex);
+//       *traj_cloud6D += *subscription.cloudKeyPoses6D;
+//       traj_cloud_size.push_back(subscription.cloudKeyPoses6D->size());
+//       currentRobotPosPoint6D.push_back(subscription.cloudKeyPoses6D->back());
+//     }
+//     lock.unlock();
 
-    // Tackle forward list
-    reverse(currentRobotPosPoint6D.begin(), currentRobotPosPoint6D.end());
+//     // Tackle forward list
+//     reverse(currentRobotPosPoint6D.begin(), currentRobotPosPoint6D.end());
 
-    // Kdtree find the single agent closest history key frame
-    kdtreeHistoryKeyPoses6D->setInputCloud(traj_cloud6D);
-    kdtreeHistoryKeyPoses6D->radiusSearch(currentRobotPosPoint6D[currentRobotIDinStack], historyKeyframeSearchRadius, pointSearchIndLoop, pointSearchSqDisLoop, 0);
-    int RSclosestHistoryFrameID = -1;
-    int interRobotID = -1;
-    int interRobotIDinStack = -1;
-    int curMinID = 1000000;
-    pcl::PointXYZI relPose;
+//     // Kdtree find the single agent closest history key frame
+//     kdtreeHistoryKeyPoses6D->setInputCloud(traj_cloud6D);
+//     kdtreeHistoryKeyPoses6D->radiusSearch(currentRobotPosPoint6D[currentRobotIDinStack], historyKeyframeSearchRadius, pointSearchIndLoop, pointSearchSqDisLoop, 0);
+//     int RSclosestHistoryFrameID = -1;
+//     int interRobotID = -1;
+//     int interRobotIDinStack = -1;
+//     int curMinID = 1000000;
+//     pcl::PointXYZI relPose;
 
-    // Policy: take Oldest one (to fix error of the whole trajectory)
-    for (int j = 1; j < pointSearchIndLoop.size(); ++j){
-      int idinKdtree = pointSearchIndLoop[j];
-      int kfIdinRobotStack = 0;
-      int trajCloudSize = 0;
+//     // Policy: take Oldest one (to fix error of the whole trajectory)
+//     for (int j = 1; j < pointSearchIndLoop.size(); ++j){
+//       int idinKdtree = pointSearchIndLoop[j];
+//       int kfIdinRobotStack = 0;
+//       int trajCloudSize = 0;
 
-      // Check the id belongs to which robot
-      for(int index = 0; index < traj_cloud_size.size(); index++){
-        trajCloudSize += traj_cloud_size[index];
-        if(idinKdtree - trajCloudSize + 1 <= 0){
-          kfIdinRobotStack = idinKdtree - trajCloudSize + traj_cloud_size[index];
-          break;
-        }
-      }
+//       // Check the id belongs to which robot
+//       for(int index = 0; index < traj_cloud_size.size(); index++){
+//         trajCloudSize += traj_cloud_size[index];
+//         if(idinKdtree - trajCloudSize + 1 <= 0){
+//           kfIdinRobotStack = idinKdtree - trajCloudSize + traj_cloud_size[index];
+//           break;
+//         }
+//       }
 
-      // Get the real robot id
-      if(realRobotID != (int)traj_cloud6D->points[idinKdtree].intensity){
-        interRobotID = (int)traj_cloud6D->points[idinKdtree].intensity;
-        relPose.intensity = (currentRobotPosPoint6D[currentRobotIDinStack].yaw - traj_cloud6D->points[idinKdtree].yaw) / M_PI * 180.0;
-        relPose.x = currentRobotPosPoint6D[currentRobotIDinStack].x - traj_cloud6D->points[idinKdtree].x;
-        relPose.y = currentRobotPosPoint6D[currentRobotIDinStack].y - traj_cloud6D->points[idinKdtree].y;
-        relPose.z = currentRobotPosPoint6D[currentRobotIDinStack].z - traj_cloud6D->points[idinKdtree].z;
-        RSclosestHistoryFrameID = kfIdinRobotStack;
-      }
+//       // Get the real robot id
+//       if(realRobotID != (int)traj_cloud6D->points[idinKdtree].intensity){
+//         interRobotID = (int)traj_cloud6D->points[idinKdtree].intensity;
+//         relPose.intensity = (currentRobotPosPoint6D[currentRobotIDinStack].yaw - traj_cloud6D->points[idinKdtree].yaw) / M_PI * 180.0;
+//         relPose.x = currentRobotPosPoint6D[currentRobotIDinStack].x - traj_cloud6D->points[idinKdtree].x;
+//         relPose.y = currentRobotPosPoint6D[currentRobotIDinStack].y - traj_cloud6D->points[idinKdtree].y;
+//         relPose.z = currentRobotPosPoint6D[currentRobotIDinStack].z - traj_cloud6D->points[idinKdtree].z;
+//         RSclosestHistoryFrameID = kfIdinRobotStack;
+//       }
 
-      // Get the robot id in the robotidstack
-      vector<int>::iterator it = find(robotIDStack.begin(), robotIDStack.end(), interRobotID);
-      interRobotIDinStack = it - robotIDStack.begin();
+//       // Get the robot id in the robotidstack
+//       vector<int>::iterator it = find(robotIDStack.begin(), robotIDStack.end(), interRobotID);
+//       interRobotIDinStack = it - robotIDStack.begin();
 
-      // Multi-robot loop
-      if(RSclosestHistoryFrameID != -1 && interRobotID != -1){
-        closestRobotID.emplace_back(interRobotIDinStack);
-        discoIndex.emplace_back(RSclosestHistoryFrameID);
-        relPoses.emplace_back(relPose);  
-        cout << "[RS Loop found] btn current robot " << realRobotID << " index: " << curr_ind << " and robot " << interRobotID << " index: " << discoIndex.back() << " interRobotIDinStack: " << interRobotIDinStack << endl;
-      }
-    }
-  }else{
-    // Find the single agent closest history keyframe
-    std::vector<int> pointSearchIndLoop;
-    std::vector<float> pointSearchSqDisLoop;
+//       // Multi-robot loop
+//       if(RSclosestHistoryFrameID != -1 && interRobotID != -1){
+//         closestRobotID.emplace_back(interRobotIDinStack);
+//         discoIndex.emplace_back(RSclosestHistoryFrameID);
+//         relPoses.emplace_back(relPose);  
+//         cout << "[RS Loop found] btn current robot " << realRobotID << " index: " << curr_ind << " and robot " << interRobotID << " index: " << discoIndex.back() << " interRobotIDinStack: " << interRobotIDinStack << endl;
+//       }
+//     }
+//   }else{
+//     // Find the single agent closest history keyframe
+//     std::vector<int> pointSearchIndLoop;
+//     std::vector<float> pointSearchSqDisLoop;
 
-    std::vector<int> traj_cloud_size;
-    pcl::PointCloud<PointTypePose>::Ptr traj_cloud6D(new pcl::PointCloud<PointTypePose>);
+//     std::vector<int> traj_cloud_size;
+//     pcl::PointCloud<PointTypePose>::Ptr traj_cloud6D(new pcl::PointCloud<PointTypePose>);
     
-    // copy trajectory cloud from subscriptions  
-    std::vector<PointTypePose> currentRobotPosPoint6D;
-    std::unique_lock<std::mutex> lock(subscriptions_mutex_);
-    for(auto& subscription: subscriptions_){
-      std::lock_guard<std::mutex> lock2(subscription.mutex);
-      *traj_cloud6D += *subscription.cloudKeyPoses6D;
-      traj_cloud_size.push_back(subscription.cloudKeyPoses6D->size());
-      currentRobotPosPoint6D.push_back(subscription.cloudKeyPoses6D->back());
-    }
-    lock.unlock();
+//     // copy trajectory cloud from subscriptions  
+//     std::vector<PointTypePose> currentRobotPosPoint6D;
+//     std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//     for(auto& subscription: subscriptions_){
+//       std::lock_guard<std::mutex> lock2(subscription.mutex);
+//       *traj_cloud6D += *subscription.cloudKeyPoses6D;
+//       traj_cloud_size.push_back(subscription.cloudKeyPoses6D->size());
+//       currentRobotPosPoint6D.push_back(subscription.cloudKeyPoses6D->back());
+//     }
+//     lock.unlock();
 
-    // Tackle forward list
-    reverse(currentRobotPosPoint6D.begin(), currentRobotPosPoint6D.end());
+//     // Tackle forward list
+//     reverse(currentRobotPosPoint6D.begin(), currentRobotPosPoint6D.end());
 
-    // Kdtree find the single agent closest history key frame
-    kdtreeHistoryKeyPoses6D->setInputCloud(traj_cloud6D);
-    kdtreeHistoryKeyPoses6D->radiusSearch(currentRobotPosPoint6D[currentRobotIDinStack], historyKeyframeSearchRadius, pointSearchIndLoop, pointSearchSqDisLoop, 0);
-    int RSclosestHistoryFrameID = -1;
-    int interRobotID = -1;
-    int interRobotIDinStack = -1;
-    int curMinID = 1000000;
+//     // Kdtree find the single agent closest history key frame
+//     kdtreeHistoryKeyPoses6D->setInputCloud(traj_cloud6D);
+//     kdtreeHistoryKeyPoses6D->radiusSearch(currentRobotPosPoint6D[currentRobotIDinStack], historyKeyframeSearchRadius, pointSearchIndLoop, pointSearchSqDisLoop, 0);
+//     int RSclosestHistoryFrameID = -1;
+//     int interRobotID = -1;
+//     int interRobotIDinStack = -1;
+//     int curMinID = 1000000;
 
-    // Policy: take Oldest one (to fix error of the whole trajectory)
-    for (int j = 0; j < pointSearchIndLoop.size(); ++j){
-      int id = pointSearchIndLoop[j];
-      if( id < curMinID && id < curr_ind) {
-        curMinID = id;
-        RSclosestHistoryFrameID = curMinID;
-      }
-    }
-  }
+//     // Policy: take Oldest one (to fix error of the whole trajectory)
+//     for (int j = 0; j < pointSearchIndLoop.size(); ++j){
+//       int id = pointSearchIndLoop[j];
+//       if( id < curMinID && id < curr_ind) {
+//         curMinID = id;
+//         RSclosestHistoryFrameID = curMinID;
+//       }
+//     }
+//   }
 
   
-  int candidate_iter_idx = 1;
-  int inter_loop_num = 0;
-  while(inter_loop_num < NUM_CANDIDATES_FROM_TREE && candidate_iter_idx < kd_result.size()){
+//   int candidate_iter_idx = 1;
+//   int inter_loop_num = 0;
+//   while(inter_loop_num < NUM_CANDIDATES_FROM_TREE && candidate_iter_idx < kd_result.size()){
 
-    if(kd_result[candidate_iter_idx].distance < DISCO_DIST_THRES){
-      int iterRobotIDinSub = nrRobots;
+//     if(kd_result[candidate_iter_idx].distance < DISCO_DIST_THRES){
+//       int iterRobotIDinSub = nrRobots;
 
-      // Find which the candidate belongs to which robot
-      std::unique_lock<std::mutex> lock(subscriptions_mutex_);
-      for(auto& subscription: subscriptions_){
-        vector<int>::iterator it = find(subscription.disco_index.begin(), subscription.disco_index.end(), kd_result[candidate_iter_idx].coord_index);
+//       // Find which the candidate belongs to which robot
+//       std::unique_lock<std::mutex> lock(subscriptions_mutex_);
+//       for(auto& subscription: subscriptions_){
+//         vector<int>::iterator it = find(subscription.disco_index.begin(), subscription.disco_index.end(), kd_result[candidate_iter_idx].coord_index);
         
-        // Find which the candidate belongs to which robot, and return robotID and index in this robot map stack
-        if(it != subscription.disco_index.end()){
-          if((it - subscription.disco_index.begin()) < curr_ind){
-            int retrieved_ind = it - subscription.disco_index.begin();
-            int realIterRobotID = subscription.robot_id;
+//         // Find which the candidate belongs to which robot, and return robotID and index in this robot map stack
+//         if(it != subscription.disco_index.end()){
+//           if((it - subscription.disco_index.begin()) < curr_ind){
+//             int retrieved_ind = it - subscription.disco_index.begin();
+//             int realIterRobotID = subscription.robot_id;
             
-            if(realRobotID == realIterRobotID)
-              break;
+//             if(realRobotID == realIterRobotID)
+//               break;
 
-            // if(curr_ind != (retrieved_ind + 1)){
-            // closestRobotID.emplace_back(subscription.robot_id);
-            closestRobotID.emplace_back(iterRobotIDinSub - 1);
-            discoIndex.emplace_back(retrieved_ind);
+//             // if(curr_ind != (retrieved_ind + 1)){
+//             // closestRobotID.emplace_back(subscription.robot_id);
+//             closestRobotID.emplace_back(iterRobotIDinSub - 1);
+//             discoIndex.emplace_back(retrieved_ind);
 
-            DiSCOFFT closestDiSCO = subscription.disco_fft[discoIndex.back()];
-            float relAngle = calcRelOri(curr_fft, closestDiSCO);
-            pcl::PointXYZI relPose;
-            relPose.x = 0.0;
-            relPose.y = 0.0;
-            relPose.z = 0.0;
-            relPose.intensity = -relAngle;
-            relPoses.emplace_back(relPose);
-            // }
+//             DiSCOFFT closestDiSCO = subscription.disco_fft[discoIndex.back()];
+//             float relAngle = calcRelOri(curr_fft, closestDiSCO);
+//             pcl::PointXYZI relPose;
+//             relPose.x = 0.0;
+//             relPose.y = 0.0;
+//             relPose.z = 0.0;
+//             relPose.intensity = -relAngle;
+//             relPoses.emplace_back(relPose);
+//             // }
 
-            std::cout.precision(5);
-            cout << "[Loop found] Nearest distance: "  << kd_result[candidate_iter_idx].distance << " btn current robot " << realRobotID << " index: " << curr_ind << " and robot " << realIterRobotID << " index: " << discoIndex.back() << endl;
-            inter_loop_num++;
-            break;
-          }
-        }
-        iterRobotIDinSub --;
-      }
-      lock.unlock();
-    }
-    candidate_iter_idx++;
-  }
+//             std::cout.precision(5);
+//             cout << "[Loop found] Nearest distance: "  << kd_result[candidate_iter_idx].distance << " btn current robot " << realRobotID << " index: " << curr_ind << " and robot " << realIterRobotID << " index: " << discoIndex.back() << endl;
+//             inter_loop_num++;
+//             break;
+//           }
+//         }
+//         iterRobotIDinSub --;
+//       }
+//       lock.unlock();
+//     }
+//     candidate_iter_idx++;
+//   }
 
-  knn_list_reset(kdtree);
+//   knn_list_reset(kdtree);
   
-  std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>> results{closestRobotID, discoIndex, relPoses};
-  return results;
-}
+//   std::tuple<std::vector<int>, std::vector<int>, std::vector<pcl::PointXYZI>> results{closestRobotID, discoIndex, relPoses};
+//   return results;
+// }
 
 
 /*
@@ -2036,224 +2036,224 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
 /*
  * Listen and process disco topic from robots
  */
-void GlobalManager::discoUpdate(const dislam_msgs::DiSCOConstPtr& msg,
-                           robotHandle_& subscription)
-{
-  ROS_INFO("\033[1;33m received disco update from: %s \033[0m", subscription.robot_name.c_str());
-  std::lock_guard<std::mutex> lock(subscription.mutex);
+// void GlobalManager::discoUpdate(const dislam_msgs::DiSCOConstPtr& msg,
+//                            robotHandle_& subscription)
+// {
+  // ROS_INFO("\033[1;33m received disco update from: %s \033[0m", subscription.robot_name.c_str());
+  // std::lock_guard<std::mutex> lock(subscription.mutex);
 
-  std::vector<float> disco_r = msg->fftr;
-  std::vector<float> disco_i = msg->ffti;
-  std::vector<float> disco = msg->signature;
+  // std::vector<float> disco_r = msg->fftr;
+  // std::vector<float> disco_i = msg->ffti;
+  // std::vector<float> disco = msg->signature;
 
-  subscription.disco_base.emplace_back(disco);
-  subscription.disco_fft.emplace_back(std::make_pair(disco_r, disco_i));
+  // subscription.disco_base.emplace_back(disco);
+  // subscription.disco_fft.emplace_back(std::make_pair(disco_r, disco_i));
 
-  std::lock_guard<std::mutex> locktree(kdtree_mutex_);
+  // std::lock_guard<std::mutex> locktree(kdtree_mutex_);
 
-  float disco_f[DISCO_DIM];
-  memcpy(disco_f, &disco[0], disco.size() * sizeof(disco[0]));
-  kdtree_insert(kdtree, disco_f);
-  subscription.disco_index.emplace_back(disco_ind);
-  disco_ind ++;
-  ROS_DEBUG("disco update done with index: %d", subscription.disco_base.size());
-}
+  // float disco_f[DISCO_DIM];
+  // memcpy(disco_f, &disco[0], disco.size() * sizeof(disco[0]));
+  // kdtree_insert(kdtree, disco_f);
+  // subscription.disco_index.emplace_back(disco_ind);
+  // disco_ind ++;
+  // ROS_DEBUG("disco update done with index: %d", subscription.disco_base.size());
+// }
 
 
 /*
  * Merge nearest Keyframes
  */
-void GlobalManager::mergeNearestKeyframes(PointCloudIPtr& Keyframe, int robot_id, int loop_id, int submap_size)
-{
-  PointCloudIPtr submapKeyframe(new PointCloudI);
-  std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
-  auto thisRobotHandle = subscriptions_.begin();
-  std::advance(thisRobotHandle, nrRobots - robot_id - 1);
+// void GlobalManager::mergeNearestKeyframes(PointCloudIPtr& Keyframe, int robot_id, int loop_id, int submap_size)
+// {
+//   PointCloudIPtr submapKeyframe(new PointCloudI);
+//   std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
+//   auto thisRobotHandle = subscriptions_.begin();
+//   std::advance(thisRobotHandle, nrRobots - robot_id - 1);
 
-  for (int i = -submap_size; i <= submap_size; ++i) {
-    int keyNear = loop_id + i;
-    // cout << "keynear " << keyNear << endl;
-    if (keyNear <= 0 || keyNear > int(thisRobotHandle->keyframes.size()))
-      continue;
+//   for (int i = -submap_size; i <= submap_size; ++i) {
+//     int keyNear = loop_id + i;
+//     // cout << "keynear " << keyNear << endl;
+//     if (keyNear <= 0 || keyNear > int(thisRobotHandle->keyframes.size()))
+//       continue;
 
-    PointCloudI cloudUpdated;
-    Eigen::Isometry3f currPose = thisRobotHandle->trajectory[loop_id];
-    Eigen::Isometry3f nearPose = thisRobotHandle->trajectory[keyNear];
-    Eigen::Isometry3f T = currPose.inverse() * nearPose;
-    Eigen::Matrix4f transformMatrix = T.matrix();
-    pcl::copyPointCloud(*(thisRobotHandle->keyframes[keyNear]), *submapKeyframe);
-    pcl::transformPointCloud(*submapKeyframe, cloudUpdated, transformMatrix);
-    *Keyframe += cloudUpdated;
-  }
-  obslock.unlock();
+//     PointCloudI cloudUpdated;
+//     Eigen::Isometry3f currPose = thisRobotHandle->trajectory[loop_id];
+//     Eigen::Isometry3f nearPose = thisRobotHandle->trajectory[keyNear];
+//     Eigen::Isometry3f T = currPose.inverse() * nearPose;
+//     Eigen::Matrix4f transformMatrix = T.matrix();
+//     pcl::copyPointCloud(*(thisRobotHandle->keyframes[keyNear]), *submapKeyframe);
+//     pcl::transformPointCloud(*submapKeyframe, cloudUpdated, transformMatrix);
+//     *Keyframe += cloudUpdated;
+//   }
+//   obslock.unlock();
 
-  // Remove ground points
-  pcl::PassThrough<PointTI> pass;
-  // pass.setInputCloud (Keyframe); 
-  // pass.setFilterFieldName ("z");
-  // pass.setFilterLimits (2.0, 40);
-  // pass.filter (*Keyframe);
+//   // Remove ground points
+//   pcl::PassThrough<PointTI> pass;
+//   // pass.setInputCloud (Keyframe); 
+//   // pass.setFilterFieldName ("z");
+//   // pass.setFilterLimits (2.0, 40);
+//   // pass.filter (*Keyframe);
 
-  pass.setInputCloud (Keyframe); 
-  pass.setFilterFieldName ("x");
-  pass.setFilterLimits (-60.0, 60.0);
-  pass.filter (*Keyframe);
+//   pass.setInputCloud (Keyframe); 
+//   pass.setFilterFieldName ("x");
+//   pass.setFilterLimits (-60.0, 60.0);
+//   pass.filter (*Keyframe);
 
-  pass.setInputCloud (Keyframe); 
-  pass.setFilterFieldName ("y");
-  pass.setFilterLimits (-60.0, 60.0);
-  pass.filter (*Keyframe);
+//   pass.setInputCloud (Keyframe); 
+//   pass.setFilterFieldName ("y");
+//   pass.setFilterLimits (-60.0, 60.0);
+//   pass.filter (*Keyframe);
 
-  pcl::VoxelGrid<PointTI> voxel;
-  voxel.setInputCloud (Keyframe);
-  voxel.setLeafSize (icp_filter_size_, icp_filter_size_, icp_filter_size_);
-  voxel.filter (*Keyframe);
-}
+//   pcl::VoxelGrid<PointTI> voxel;
+//   voxel.setInputCloud (Keyframe);
+//   voxel.setLeafSize (icp_filter_size_, icp_filter_size_, icp_filter_size_);
+//   voxel.filter (*Keyframe);
+// }
 
 
 /*
  * ICP check between looped two frames
  */
-std::pair<float, Pose3> GlobalManager::ICPCheck(uint64_t id1, uint64_t id2, Eigen::Isometry3d initPose)
-{
-  // Get corresponding point cloud
-  int robot1_id = Key2robotID(id1);
-  int robot2_id = Key2robotID(id2);
-  int robot1_KeyframeID = id1 - robotID2Key(robot1_id) - 1;
-  int robot2_KeyframeID = id2 - robotID2Key(robot2_id) - 1;
+// std::pair<float, Pose3> GlobalManager::ICPCheck(uint64_t id1, uint64_t id2, Eigen::Isometry3d initPose)
+// {
+//   // Get corresponding point cloud
+//   int robot1_id = Key2robotID(id1);
+//   int robot2_id = Key2robotID(id2);
+//   int robot1_KeyframeID = id1 - robotID2Key(robot1_id) - 1;
+//   int robot2_KeyframeID = id2 - robotID2Key(robot2_id) - 1;
 
-  PointCloudIPtr queryKeyframe(new PointCloudI);
-  PointCloudIPtr databaseKeyframe(new PointCloudI);
-  PointCloudIPtr queryKeyframeTransformed(new PointCloudI);
-  std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
-  auto queryRobotHandle = subscriptions_.begin();
-  auto databaseRobotHandle = subscriptions_.begin();
-  std::advance(queryRobotHandle, nrRobots - robot1_id - 1);
-  std::advance(databaseRobotHandle, nrRobots - robot2_id - 1);
-  obslock.unlock();
+//   PointCloudIPtr queryKeyframe(new PointCloudI);
+//   PointCloudIPtr databaseKeyframe(new PointCloudI);
+//   PointCloudIPtr queryKeyframeTransformed(new PointCloudI);
+//   std::unique_lock<std::mutex> obslock(subscriptions_mutex_);
+//   auto queryRobotHandle = subscriptions_.begin();
+//   auto databaseRobotHandle = subscriptions_.begin();
+//   std::advance(queryRobotHandle, nrRobots - robot1_id - 1);
+//   std::advance(databaseRobotHandle, nrRobots - robot2_id - 1);
+//   obslock.unlock();
 
-  if(queryRobotHandle->keyframes.size() <= robot1_KeyframeID + submap_size_)
-    return make_pair(0, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
+//   if(queryRobotHandle->keyframes.size() <= robot1_KeyframeID + submap_size_)
+//     return make_pair(0, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
   
-  cout << "ICP check between robot " << robot1_id << " des: " << robot1_KeyframeID << " and robot " << robot2_id << " des: " << robot2_KeyframeID << endl;
+//   cout << "ICP check between robot " << robot1_id << " des: " << robot1_KeyframeID << " and robot " << robot2_id << " des: " << robot2_KeyframeID << endl;
 
-  mergeNearestKeyframes(queryKeyframe, robot1_id, robot1_KeyframeID, submap_size_);
-  mergeNearestKeyframes(databaseKeyframe, robot2_id, robot2_KeyframeID, submap_size_);
+//   mergeNearestKeyframes(queryKeyframe, robot1_id, robot1_KeyframeID, submap_size_);
+//   mergeNearestKeyframes(databaseKeyframe, robot2_id, robot2_KeyframeID, submap_size_);
 
-  cout << "queryKeyframe size " << queryKeyframe->size() << endl;
-  cout << "databaseKeyframe " << databaseKeyframe->size() << endl;
+//   cout << "queryKeyframe size " << queryKeyframe->size() << endl;
+//   cout << "databaseKeyframe " << databaseKeyframe->size() << endl;
 
-  if(queryKeyframe->size() == 0 || databaseKeyframe->size() == 0)
-    return make_pair(-1, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
+//   if(queryKeyframe->size() == 0 || databaseKeyframe->size() == 0)
+//     return make_pair(-1, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
 
-  // Apply initial guess
-  Eigen::Matrix4d transformMatrix = initPose.matrix();
-  Eigen::Matrix4f transformMatrixf = transformMatrix.cast <float> ();
-  // pcl::transformPointCloud(*queryKeyframe, *queryKeyframeTransformed, transformMatrix); 
-  auto start = system_clock::now();
+//   // Apply initial guess
+//   Eigen::Matrix4d transformMatrix = initPose.matrix();
+//   Eigen::Matrix4f transformMatrixf = transformMatrix.cast <float> ();
+//   // pcl::transformPointCloud(*queryKeyframe, *queryKeyframeTransformed, transformMatrix); 
+//   auto start = system_clock::now();
 
-  // OPEN3D registration
-  // geometry::PointCloud source;
-  // std::vector<Eigen::Vector3d> sourcePoints;
-  // for (int i = 0; i < queryKeyframe->size (); i++) {
-  //   sourcePoints.emplace_back(queryKeyframe->points[i].x,queryKeyframe->points[i].y,queryKeyframe->points[i].z);
-  // }
-  // source.points_ = sourcePoints;
+//   // OPEN3D registration
+//   // geometry::PointCloud source;
+//   // std::vector<Eigen::Vector3d> sourcePoints;
+//   // for (int i = 0; i < queryKeyframe->size (); i++) {
+//   //   sourcePoints.emplace_back(queryKeyframe->points[i].x,queryKeyframe->points[i].y,queryKeyframe->points[i].z);
+//   // }
+//   // source.points_ = sourcePoints;
 
-  // geometry::PointCloud target;
-  // std::vector<Eigen::Vector3d> targetPoints;
-  // for (int i = 0; i < databaseKeyframe->size (); i++) {
-  //   targetPoints.emplace_back(databaseKeyframe->points[i].x,databaseKeyframe->points[i].y,databaseKeyframe->points[i].z);
-  // }
-  // target.points_ = targetPoints;
+//   // geometry::PointCloud target;
+//   // std::vector<Eigen::Vector3d> targetPoints;
+//   // for (int i = 0; i < databaseKeyframe->size (); i++) {
+//   //   targetPoints.emplace_back(databaseKeyframe->points[i].x,databaseKeyframe->points[i].y,databaseKeyframe->points[i].z);
+//   // }
+//   // target.points_ = targetPoints;
 
-  // auto res = pipelines::registration::RegistrationGeneralizedICP(
-  //         source, target, 3.0, transformMatrix,
-  //         pipelines::registration::TransformationEstimationForGeneralizedICP(),
-  //         pipelines::registration::ICPConvergenceCriteria(1e-4, 1e-6, 100));	
-	// cout << "fitness: "<< res.fitness_ << " inlier rmse: " << res.inlier_rmse_ << " correspondence_set size: " << res.correspondence_set_.size() << endl;
+//   // auto res = pipelines::registration::RegistrationGeneralizedICP(
+//   //         source, target, 3.0, transformMatrix,
+//   //         pipelines::registration::TransformationEstimationForGeneralizedICP(),
+//   //         pipelines::registration::ICPConvergenceCriteria(1e-4, 1e-6, 100));	
+// 	// cout << "fitness: "<< res.fitness_ << " inlier rmse: " << res.inlier_rmse_ << " correspondence_set size: " << res.correspondence_set_.size() << endl;
 
-  // std::shared_ptr<geometry::PointCloud> source_transformed_ptr(new geometry::PointCloud);
-  // *source_transformed_ptr = source;
-  // source_transformed_ptr->Transform(res.transformation_);
+//   // std::shared_ptr<geometry::PointCloud> source_transformed_ptr(new geometry::PointCloud);
+//   // *source_transformed_ptr = source;
+//   // source_transformed_ptr->Transform(res.transformation_);
 
-  // for(int i = 0; i < source_transformed_ptr->points_.size(); i++){
-  //   PointTI pt;
-  //   pt.x = source_transformed_ptr->points_[i][0];
-  //   pt.y = source_transformed_ptr->points_[i][1];
-  //   pt.z = source_transformed_ptr->points_[i][2];
-  //   queryKeyframeTransformed->push_back(pt);
-  // }
+//   // for(int i = 0; i < source_transformed_ptr->points_.size(); i++){
+//   //   PointTI pt;
+//   //   pt.x = source_transformed_ptr->points_[i][0];
+//   //   pt.y = source_transformed_ptr->points_[i][1];
+//   //   pt.z = source_transformed_ptr->points_[i][2];
+//   //   queryKeyframeTransformed->push_back(pt);
+//   // }
 
-  auto icp = select_registration_method(registration_method_);
+//   auto icp = select_registration_method(registration_method_);
 
-  icp->setInputSource(queryKeyframe);
-  icp->setInputTarget(databaseKeyframe);
-  PointCloudIPtr unused_result(new PointCloudI);
-  icp->align(*unused_result, transformMatrixf); 
+//   icp->setInputSource(queryKeyframe);
+//   icp->setInputTarget(databaseKeyframe);
+//   PointCloudIPtr unused_result(new PointCloudI);
+//   icp->align(*unused_result, transformMatrixf); 
 
-  auto end = system_clock::now();
-  auto duration_icp = duration_cast<microseconds>(end - start);
-  ROS_WARN("icp cost: %lfs!", double(duration_icp.count()) * microseconds::period::num / microseconds::period::den);
+//   auto end = system_clock::now();
+//   auto duration_icp = duration_cast<microseconds>(end - start);
+//   ROS_WARN("icp cost: %lfs!", double(duration_icp.count()) * microseconds::period::num / microseconds::period::den);
 
-  // For Visualization
-  PointCloudI queryTransCloud;
-  Eigen::Isometry3f queryPose = queryRobotHandle->trajectory[robot1_KeyframeID-1];
-  Eigen::Matrix4f transToGlobalQ = queryPose.matrix();
-  pcl::transformPointCloud(*queryKeyframe, queryTransCloud, transToGlobalQ);
-  pcl::transformPointCloud(*queryKeyframe, *queryKeyframeTransformed, transformMatrixf);
+//   // For Visualization
+//   PointCloudI queryTransCloud;
+//   Eigen::Isometry3f queryPose = queryRobotHandle->trajectory[robot1_KeyframeID-1];
+//   Eigen::Matrix4f transToGlobalQ = queryPose.matrix();
+//   pcl::transformPointCloud(*queryKeyframe, queryTransCloud, transToGlobalQ);
+//   pcl::transformPointCloud(*queryKeyframe, *queryKeyframeTransformed, transformMatrixf);
 
-  PointCloudI databaseTransCloud;
-  Eigen::Isometry3f databaseyPose = databaseRobotHandle->trajectory[robot2_KeyframeID-1];
-  Eigen::Matrix4f transToGlobalD = databaseyPose.matrix();
-  pcl::transformPointCloud(*databaseKeyframe, databaseTransCloud, transToGlobalD);
+//   PointCloudI databaseTransCloud;
+//   Eigen::Isometry3f databaseyPose = databaseRobotHandle->trajectory[robot2_KeyframeID-1];
+//   Eigen::Matrix4f transToGlobalD = databaseyPose.matrix();
+//   pcl::transformPointCloud(*databaseKeyframe, databaseTransCloud, transToGlobalD);
 
-  PointCloudI alignedTransCloud;
-  pcl::transformPointCloud(*queryKeyframeTransformed, alignedTransCloud, transToGlobalQ);
+//   PointCloudI alignedTransCloud;
+//   pcl::transformPointCloud(*queryKeyframeTransformed, alignedTransCloud, transToGlobalQ);
 
-  // Publish visualization
-  sensor_msgs::PointCloud2 query_output;
-  pcl::toROSMsg(*queryKeyframeTransformed, query_output);
-  query_output.header.frame_id = global_map_frame_;
-  query_cloud_publisher_.publish(query_output);
+//   // Publish visualization
+//   sensor_msgs::PointCloud2 query_output;
+//   pcl::toROSMsg(*queryKeyframeTransformed, query_output);
+//   query_output.header.frame_id = global_map_frame_;
+//   query_cloud_publisher_.publish(query_output);
 
-  sensor_msgs::PointCloud2 database_output;
-  pcl::toROSMsg(*databaseKeyframe, database_output);
-  database_output.header.frame_id = global_map_frame_;
-  database_cloud_publisher_.publish(database_output);
+//   sensor_msgs::PointCloud2 database_output;
+//   pcl::toROSMsg(*databaseKeyframe, database_output);
+//   database_output.header.frame_id = global_map_frame_;
+//   database_cloud_publisher_.publish(database_output);
 
-  sensor_msgs::PointCloud2 aligned_output;
-  pcl::toROSMsg(*unused_result, aligned_output);
-  aligned_output.header.frame_id = global_map_frame_;
-  aligned_cloud_publisher_.publish(aligned_output);
+//   sensor_msgs::PointCloud2 aligned_output;
+//   pcl::toROSMsg(*unused_result, aligned_output);
+//   aligned_output.header.frame_id = global_map_frame_;
+//   aligned_cloud_publisher_.publish(aligned_output);
 
-  if (icp->hasConverged() == false || icp->getFitnessScore(1.0) > acceptedKeyframeFitnessScore) {
-    std::cout << "[loop] ICP fitness test failed (" << icp->getFitnessScore(1.0) << " > " << acceptedKeyframeFitnessScore << "). Reject this loop." << std::endl;
+//   if (icp->hasConverged() == false || icp->getFitnessScore(1.0) > acceptedKeyframeFitnessScore) {
+//     std::cout << "[loop] ICP fitness test failed (" << icp->getFitnessScore(1.0) << " > " << acceptedKeyframeFitnessScore << "). Reject this loop." << std::endl;
     
-    return make_pair(-1, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
-  } else {
-    std::cout << "[loop] ICP fitness test passed (" << icp->getFitnessScore(1.0) << " < " << acceptedKeyframeFitnessScore << "). Add this loop." << std::endl;
+//     return make_pair(-1, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
+//   } else {
+//     std::cout << "[loop] ICP fitness test passed (" << icp->getFitnessScore(1.0) << " < " << acceptedKeyframeFitnessScore << "). Add this loop." << std::endl;
     
-    float x, y, z, roll, pitch, yaw;
-    auto finalResult = icp->getFinalTransformation();
+//     float x, y, z, roll, pitch, yaw;
+//     auto finalResult = icp->getFinalTransformation();
 
-    Eigen::Isometry3f finalTransform =  (Eigen::Isometry3f)finalResult;
+//     Eigen::Isometry3f finalTransform =  (Eigen::Isometry3f)finalResult;
 
-    Pose3 finalTPose3 = Pose3(((Eigen::Isometry3d)finalTransform).matrix());;
-    return make_pair(icp->getFitnessScore(1.0), finalTPose3);
-  }
+//     Pose3 finalTPose3 = Pose3(((Eigen::Isometry3d)finalTransform).matrix());;
+//     return make_pair(icp->getFitnessScore(1.0), finalTPose3);
+//   }
 
-  // if (res.correspondence_set_.size() <= queryKeyframe->size()/2 || res.inlier_rmse_ > acceptedKeyframeFitnessScore) {
-  //   std::cout << "[loop] ICP fitness test failed (" << res.inlier_rmse_ << " > " << acceptedKeyframeFitnessScore << "). Reject this loop." << std::endl;
+//   // if (res.correspondence_set_.size() <= queryKeyframe->size()/2 || res.inlier_rmse_ > acceptedKeyframeFitnessScore) {
+//   //   std::cout << "[loop] ICP fitness test failed (" << res.inlier_rmse_ << " > " << acceptedKeyframeFitnessScore << "). Reject this loop." << std::endl;
     
-  //   return make_pair(-1, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
-  // } else {
-  //   std::cout << "[loop] ICP fitness test passed (" << res.inlier_rmse_ << " < " << acceptedKeyframeFitnessScore << "). Add this loop." << std::endl;
-  //   cout << res.transformation_.matrix() << endl;
-  //   Pose3 finalTPose3 = Pose3(((Eigen::Isometry3d)res.transformation_).matrix());;
-  //   return make_pair(res.inlier_rmse_, finalTPose3);
-  // }
-}
+//   //   return make_pair(-1, Pose3(Rot3::RzRyRx(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)));
+//   // } else {
+//   //   std::cout << "[loop] ICP fitness test passed (" << res.inlier_rmse_ << " < " << acceptedKeyframeFitnessScore << "). Add this loop." << std::endl;
+//   //   cout << res.transformation_.matrix() << endl;
+//   //   Pose3 finalTPose3 = Pose3(((Eigen::Isometry3d)res.transformation_).matrix());;
+//   //   return make_pair(res.inlier_rmse_, finalTPose3);
+//   // }
+// }
 
 
 /*
@@ -2284,6 +2284,7 @@ PointCloud GlobalManager::composeGlobalMap()
 
     // Service get map periodically
     if (subscription.init_map_client_.call(srv)){
+      ROS_WARN("Successful to call service init map");
       PointCloudPtr initSubmap(new PointCloud);
       pcl::fromROSMsg(srv.response.submap, *initSubmap);
       local_map_stack[subscription.robot_id - start_robot_id_] = *initSubmap;
@@ -2585,53 +2586,53 @@ void GlobalManager::publishPoseGraph()
 /*
  * Select registration methods
  */
-pcl::Registration<pcl::PointXYZI, pcl::PointXYZI>::Ptr GlobalManager::select_registration_method(std::string type)
-{
-  // pcl::IterativeClosestPoint<PointTI, PointTI> icp;
-  if(registration_method_ == "PCL_GICP"){
-    std::cout << "registration: PCL_GICP" << std::endl;
-    pcl::GeneralizedIterativeClosestPoint<PointTI, PointTI>::Ptr icp(new pcl::GeneralizedIterativeClosestPoint<PointTI, PointTI>());
-    icp->setMaxCorrespondenceDistance(100.0);
-    icp->setMaximumIterations((int)icp_iters_);
-    icp->setTransformationEpsilon(1e-3);
-    icp->setEuclideanFitnessEpsilon(1e-3);
-    return icp;
-  }else if(registration_method_ == "PCL_ICP"){
-    std::cout << "registration: PCL_ICP" << std::endl;
-    pcl::IterativeClosestPoint<PointTI, PointTI>::Ptr icp(new pcl::IterativeClosestPoint<PointTI, PointTI>());
-    icp->setMaxCorrespondenceDistance(100.0);
-    icp->setMaximumIterations((int)icp_iters_);
-    icp->setTransformationEpsilon(1e-3);
-    icp->setEuclideanFitnessEpsilon(1e-3);
-    return icp;
-  }else if(registration_method_ == "FAST_GICP"){
-    std::cout << "registration: FAST_GICP" << std::endl;
-    fast_gicp::FastGICP<PointTI, PointTI>::Ptr gicp(new fast_gicp::FastGICP<PointTI, PointTI>());
-    gicp->setNumThreads(8);
-    gicp->setTransformationEpsilon(1e-3);
-    gicp->setMaximumIterations((int)icp_iters_);
-    gicp->setMaxCorrespondenceDistance(100.0);
-    gicp->setCorrespondenceRandomness(15);
-    return gicp;
-  }
-  else if(registration_method_ == "FAST_VGICP_CUDA") {
-    #ifdef USE_VGICP_CUDA
-    std::cout << "registration: FAST_VGICP_CUDA" << std::endl;
-    fast_gicp::FastVGICPCuda<PointTI, PointTI>::Ptr vgicp(new fast_gicp::FastVGICPCuda<PointTI, PointTI>());
-    vgicp->setResolution(0.5);
-    vgicp->setTransformationEpsilon(1e-3);
-    vgicp->setMaximumIterations((int)icp_iters_);
-    vgicp->setCorrespondenceRandomness(15);
-    vgicp->setNeighborSearchMethod(fast_gicp::NeighborSearchMethod::DIRECT1, 1.5);
+// pcl::Registration<pcl::PointXYZI, pcl::PointXYZI>::Ptr GlobalManager::select_registration_method(std::string type)
+// {
+//   // pcl::IterativeClosestPoint<PointTI, PointTI> icp;
+//   if(registration_method_ == "PCL_GICP"){
+//     std::cout << "registration: PCL_GICP" << std::endl;
+//     pcl::GeneralizedIterativeClosestPoint<PointTI, PointTI>::Ptr icp(new pcl::GeneralizedIterativeClosestPoint<PointTI, PointTI>());
+//     icp->setMaxCorrespondenceDistance(100.0);
+//     icp->setMaximumIterations((int)icp_iters_);
+//     icp->setTransformationEpsilon(1e-3);
+//     icp->setEuclideanFitnessEpsilon(1e-3);
+//     return icp;
+//   }else if(registration_method_ == "PCL_ICP"){
+//     std::cout << "registration: PCL_ICP" << std::endl;
+//     pcl::IterativeClosestPoint<PointTI, PointTI>::Ptr icp(new pcl::IterativeClosestPoint<PointTI, PointTI>());
+//     icp->setMaxCorrespondenceDistance(100.0);
+//     icp->setMaximumIterations((int)icp_iters_);
+//     icp->setTransformationEpsilon(1e-3);
+//     icp->setEuclideanFitnessEpsilon(1e-3);
+//     return icp;
+//   }else if(registration_method_ == "FAST_GICP"){
+//     std::cout << "registration: FAST_GICP" << std::endl;
+//     fast_gicp::FastGICP<PointTI, PointTI>::Ptr gicp(new fast_gicp::FastGICP<PointTI, PointTI>());
+//     gicp->setNumThreads(8);
+//     gicp->setTransformationEpsilon(1e-3);
+//     gicp->setMaximumIterations((int)icp_iters_);
+//     gicp->setMaxCorrespondenceDistance(100.0);
+//     gicp->setCorrespondenceRandomness(15);
+//     return gicp;
+//   }
+//   else if(registration_method_ == "FAST_VGICP_CUDA") {
+//     #ifdef USE_VGICP_CUDA
+//     std::cout << "registration: FAST_VGICP_CUDA" << std::endl;
+//     fast_gicp::FastVGICPCuda<PointTI, PointTI>::Ptr vgicp(new fast_gicp::FastVGICPCuda<PointTI, PointTI>());
+//     vgicp->setResolution(0.5);
+//     vgicp->setTransformationEpsilon(1e-3);
+//     vgicp->setMaximumIterations((int)icp_iters_);
+//     vgicp->setCorrespondenceRandomness(15);
+//     vgicp->setNeighborSearchMethod(fast_gicp::NeighborSearchMethod::DIRECT1, 1.5);
 
-    return vgicp;
-    #endif
-    cerr << "FAST_VGICP_CUDA is Not Build !!" << endl;
-  }
-  else{
-    cerr << "Not Implemented Registration Method !!" << endl;
-  }
-}
+//     return vgicp;
+//     #endif
+//     cerr << "FAST_VGICP_CUDA is Not Build !!" << endl;
+//   }
+//   else{
+//     cerr << "Not Implemented Registration Method !!" << endl;
+//   }
+// }
 
 
 ///////////////////// Utility Functions /////////////////////
@@ -2888,50 +2889,50 @@ std::vector<int> sort_indexes(const std::vector<int> v)
 /*
  * Utility function: calculate relative orientation between two DiSCO
  */
-float GlobalManager::calcRelOri(DiSCOFFT newDiSCO, DiSCOFFT oldDiSCO)
-{
-  double eps = 1e-10;
+// float GlobalManager::calcRelOri(DiSCOFFT newDiSCO, DiSCOFFT oldDiSCO)
+// {
+//   double eps = 1e-10;
 
-  std::vector<float> real_a = newDiSCO.first;
-  std::vector<float> real_b = oldDiSCO.first;
-  std::vector<float> imag_a = newDiSCO.second;
-  std::vector<float> imag_b = oldDiSCO.second;
+//   std::vector<float> real_a = newDiSCO.first;
+//   std::vector<float> real_b = oldDiSCO.first;
+//   std::vector<float> imag_a = newDiSCO.second;
+//   std::vector<float> imag_b = oldDiSCO.second;
 
-  int width = disco_width_;
-  int height = disco_height_;
+//   int width = disco_width_;
+//   int height = disco_height_;
 
-  fftw_complex *cross_img = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*height*width);
-  double r0 = 0.0;
-  for(int i = 0; i < real_a.size(); i++){
-    cross_img[i][0] = real_a[i] * real_b[i] + imag_a[i] * imag_b[i];
-    cross_img[i][1] = real_a[i] * imag_b[i] + real_b[i] * imag_a[i];
-    r0 += sqrt(real_a[i] * real_a[i] + imag_a[i] * imag_a[i] + eps) * sqrt(real_b[i] * real_b[i] + imag_b[i] * imag_b[i] + eps);
-    cross_img[i][0] / (r0 + eps);
-    cross_img[i][0] / (r0 + eps);
-  }
+//   fftw_complex *cross_img = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*height*width);
+//   double r0 = 0.0;
+//   for(int i = 0; i < real_a.size(); i++){
+//     cross_img[i][0] = real_a[i] * real_b[i] + imag_a[i] * imag_b[i];
+//     cross_img[i][1] = real_a[i] * imag_b[i] + real_b[i] * imag_a[i];
+//     r0 += sqrt(real_a[i] * real_a[i] + imag_a[i] * imag_a[i] + eps) * sqrt(real_b[i] * real_b[i] + imag_b[i] * imag_b[i] + eps);
+//     cross_img[i][0] / (r0 + eps);
+//     cross_img[i][0] / (r0 + eps);
+//   }
 
-  fftw_plan cross_backward_plan = fftw_plan_dft_2d(height, width, cross_img, cross_img,
-                                                    FFTW_BACKWARD, FFTW_ESTIMATE);
-  fftw_execute(cross_backward_plan);
-  fftw_destroy_plan(cross_backward_plan);
-  Eigen::VectorXf cross_real = Eigen::VectorXf::Zero(height*width);
-  for (int i= 0; i < height*width; i++)
-  {
-    cross_real(i) = cross_img[i][0];
-  }
+//   fftw_plan cross_backward_plan = fftw_plan_dft_2d(height, width, cross_img, cross_img,
+//                                                     FFTW_BACKWARD, FFTW_ESTIMATE);
+//   fftw_execute(cross_backward_plan);
+//   fftw_destroy_plan(cross_backward_plan);
+//   Eigen::VectorXf cross_real = Eigen::VectorXf::Zero(height*width);
+//   for (int i= 0; i < height*width; i++)
+//   {
+//     cross_real(i) = cross_img[i][0];
+//   }
 
-  std::ptrdiff_t max_loc;
-  float unuse = cross_real.maxCoeff(&max_loc);
+//   std::ptrdiff_t max_loc;
+//   float unuse = cross_real.maxCoeff(&max_loc);
 
-  int height_offset = floor(((int) max_loc)/ width);
-  int width_offset = (int)max_loc - width * height_offset;
+//   int height_offset = floor(((int) max_loc)/ width);
+//   int width_offset = (int)max_loc - width * height_offset;
 
-  // if (width_offset > 0.5 * width)
-  //   width_offset = width_offset - width;
+//   // if (width_offset > 0.5 * width)
+//   //   width_offset = width_offset - width;
 
-  float relAngle = width_offset * 3.0;
-  return relAngle;
-}
+//   float relAngle = width_offset * 3.0;
+//   return relAngle;
+// }
 
 
 void swap(std::complex<float> *v1, std::complex<float> *v2)

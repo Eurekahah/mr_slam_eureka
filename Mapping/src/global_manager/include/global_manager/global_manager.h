@@ -107,7 +107,7 @@ namespace global_manager
 // Define robot handler
 typedef struct RobotHandle {
   // protects map
-  int robot_id;
+  int robot_id;         // 机器人id
   bool initState;
   std::mutex mutex;
   SubMapVec submaps;  // submaps get from GEM
