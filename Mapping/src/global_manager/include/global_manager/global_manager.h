@@ -288,6 +288,7 @@ private:
 
   // publishing
   ros::Publisher merged_pointcloud_publisher_;
+  ros::Publisher one_iteration_pointcloud_publisher_;
   ros::Publisher merged_elevation_map_publisher_;
   ros::Publisher query_cloud_publisher_;
   ros::Publisher database_cloud_publisher_;
@@ -326,6 +327,7 @@ private:
   void publishPoseGraph();
   void publishMergedMap();
   void publishMergedPointcloud();
+  void publishOneIterationPointcloud(PointCloudI & oneIteration_pointcloud);
   Key robotID2Key(int robotid);
   int Key2robotID(Key robotKey);
 

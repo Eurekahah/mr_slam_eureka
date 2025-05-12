@@ -11,7 +11,7 @@ namespace global_manager
 {
 GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(private_nh)
 {
-  std::string merged_elevation_map_topic, merged_pointcloud_topic, pose_graph_topic, opt_state_topic;
+  std::string merged_elevation_map_topic,one_iteration_pointcloud_topic, merged_pointcloud_topic, pose_graph_topic, opt_state_topic;
 
   // Get parameters from launch file
   private_nh.param("use_pcm", use_pcm, true);
@@ -52,6 +52,7 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   private_nh.param<std::string>("registration_method", registration_method_, "FAST_GICP");
   private_nh.param<std::string>("merged_elevation_map_topic", merged_elevation_map_topic, "map");
   private_nh.param<std::string>("merged_point_cloud_topic", merged_pointcloud_topic, "map");
+  private_nh.param<std::string>("one_iteration_point_cloud_topic", one_iteration_pointcloud_topic, "map");
   private_nh.param<std::string>("pg_saving_filename", pg_saving_filename_, "./fullGraph.g2o");
   private_nh.param<std::string>("keyframe_saving_dir", keyframe_saving_dir_, "./Keyframes/");
   private_nh.param<std::string>("initmap_service_topic", initmap_service_topic_, "map_srv");
@@ -67,6 +68,7 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   /* Publishing */
   merged_elevation_map_publisher_ = node_.advertise<PointCloud>(merged_elevation_map_topic, 10);
   merged_pointcloud_publisher_ = node_.advertise<PointCloud>(merged_pointcloud_topic, 10);
+  one_iteration_pointcloud_publisher_ = node_.advertise<PointCloud>(one_iteration_pointcloud_topic, 10);
   query_cloud_publisher_ = node_.advertise<PointCloud>("/query_cloud", 10);
   database_cloud_publisher_ = node_.advertise<PointCloud>("/database_cloud", 10);
   aligned_cloud_publisher_ = node_.advertise<PointCloud>("/aligned_cloud", 10);
@@ -433,7 +435,13 @@ void GlobalManager::savingKeyframes(Values fullInitial)
 
         // ofs << "accum_distance " << 0.0 << "\n";
         ofs << "id " << newid  << "\n";
-
+        
+        // 检查点云是否为空
+        if (subscription.keyframes[i]->empty()) {
+          ROS_WARN("Keyframe point cloud is empty for robot %d, keyframe %d. Skipping save.", robotid, i);
+          continue;
+        }
+        
         string filename = directory + "/cloud.pcd";
         pcl::io::savePCDFileBinary(filename, *subscription.keyframes[i]);
       }
@@ -587,6 +595,7 @@ void GlobalManager::discovery()
       /* subscribe map callbacks */
       map_topic = ros::names::append(robot_name, robot_submap_topic_);
       ROS_INFO("\033[1;31m Subscribing to MAP topic: %s \033[0m", map_topic.c_str());
+      // 这里订阅子地图调用地图更新函数
       subscription.map_sub = node_.subscribe<dislam_msgs::SubMap>(
           map_topic, 10, [this, &subscription](const dislam_msgs::SubMapConstPtr& msg) {
             mapUpdate(msg, subscription);
@@ -1823,6 +1832,8 @@ Values GlobalManager::copyInitial()
 /*
  * Listen and process map topic from robots
  */
+
+// 收到子地图的消息后进行更新
 void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
                            robotHandle_& subscription)
 {
@@ -1839,6 +1850,7 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
   Eigen::Isometry3f traj(q);
 
   // Add tracjectory(pose) to robotHandle
+  // 保存轨迹
   traj.pretranslate(Eigen::Vector3f(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z));
   subscription.trajectory.emplace_back(traj);
 
@@ -1856,20 +1868,24 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
   pcl::fromROSMsg(msg->keyframePC, *_laser_cloud_in);
   ros::Time timestamp = msg->keyframePC.header.stamp;
   
+  // 对关键帧点云进行体素滤波
   pcl::VoxelGrid<PointTI> voxel;
   voxel.setInputCloud (_laser_cloud_in);
   voxel.setLeafSize (submap_voxel_leaf_size_, submap_voxel_leaf_size_, submap_voxel_leaf_size_);
   voxel.filter (*_laser_cloud_in);
 
   // Add submap and keyframe point cloud to robotHandle
+  // 对子地图点云进行体素滤波
   pcl::VoxelGrid<PointT> voxelSubmap;
   voxelSubmap.setInputCloud (_submap_in);
   voxelSubmap.setLeafSize (submap_voxel_leaf_size_, submap_voxel_leaf_size_, submap_voxel_leaf_size_);
   voxelSubmap.filter (*_submap_in);
 
+  //保存子地图
   subscription.submaps.emplace_back(_submap_in);
 
   // Remove ground points
+  // 移除地面点 z轴范围小于-1.0或大于30
   pcl::PassThrough<pcl::PointXYZI> pass;
   pass.setInputCloud (_laser_cloud_in); 
   pass.setFilterFieldName ("z");
@@ -1881,10 +1897,13 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
   }
 
   // Add to map TF stack
+  // 将子地图添加到全局地图栈 全局地图栈里面存储了每个机器人的所有子地图
   std::unique_lock<std::mutex> maplock(map_mutex);
   global_map_stack[robotid].emplace_back(*_submap_in);
   maplock.unlock();
 
+  // 将位姿转换为gtsam的Pose3格式欧拉角
+  // 这里的位姿是子地图的位姿
   tf::Quaternion quat;
   double roll, pitch, yaw;
   tf::quaternionMsgToTF(msg->pose.orientation, quat);
@@ -1900,6 +1919,8 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
   subscription.transformTobeMapped[5] = msg->pose.position.z;
 
   // Add graph factor to robotHandle
+  // 第一次收到则初始化图
+  // 之后则添加图
   if (subscription.cloudKeyPoses3D->points.empty()){
     ROS_DEBUG("Init graph");
 
@@ -1928,12 +1949,12 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
     lastTF[robotid] = traj;
 
     // Every robot has its own map tf for map composing
-    std::vector<Eigen::Isometry3f, Eigen::aligned_allocator<Eigen::Isometry3f>> newRobotOriginMapTF;
-    std::vector<Eigen::Isometry3f, Eigen::aligned_allocator<Eigen::Isometry3f>> newRobotOptMapTF;
+    std::vector<Eigen::Isometry3f, Eigen::aligned_allocator<Eigen::Isometry3f>> newRobotOriginMapTF; // 旧TF
+    std::vector<Eigen::Isometry3f, Eigen::aligned_allocator<Eigen::Isometry3f>> newRobotOptMapTF;  // 新TF
     Eigen::Isometry3f identity = Eigen::Isometry3f::Identity();
 
     originMapTF[robotid].emplace_back(traj);
-    optMapTF[robotid].emplace_back(currentRef[robotid] * identity);
+    optMapTF[robotid].emplace_back(currentRef[robotid] * identity); // 初始化相当于 没有进行优化
 
     // Id rule: id = char(robotid) << indexBits + storage index
     id0 = robotID2Key(robotid);
@@ -1946,6 +1967,7 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
     initial->insert(id1, Pose3(R,t));
     
     // Add prior factor
+    // 构造优化因子
     if(robotid == 0){  
       NonlinearFactor::shared_ptr factor(new BetweenFactor<Pose3>(id0, id1, Pose3(R,t), priorNoise));
       graph->push_back(factor);
@@ -1958,6 +1980,7 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
     std::lock_guard<std::mutex> lock(graph_mutex_);
     graphAndValuesVec[robotid] = pair;
 
+    // 这里保存当前的位姿用于下次迭代，但是这个ifelse之后就有这里是不是多余了
     for (int i = 0; i < 6; ++i)
       subscription.transformLast[i] = subscription.transformTobeMapped[i];
     
@@ -1969,11 +1992,15 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
     subscription.keyframes.emplace_back(_laser_cloud_in);
     subscription.timestamps.emplace_back(timestamp);
 
+    // 这里为什么要发布关键帧点云，收到一次就发布一次关键帧？？
+    // 这里的关键帧点云是经过滤波的，去除了地面点云
     sensor_msgs::PointCloud2 output;
     pcl::toROSMsg(*_laser_cloud_in, output);
     subscription.keyframe_pub.publish(output);
 
     // Prep for factor
+    // 这里的id2是当前子地图（关键帧）的id
+    // 这里的id1是当前子地图的id-1
     uint64_t id1, id2;
     id2 = robotID2Key(robotid) + subscription.trajectory.size();
     id1 = id2 - 1; 
@@ -2002,6 +2029,7 @@ void GlobalManager::mapUpdate(const dislam_msgs::SubMapConstPtr& msg,
     auto duration = duration_cast<microseconds>(end - start);
     ROS_DEBUG("Add to graph done");
     cout <<  "map update spend " << double(duration.count()) * microseconds::period::num / microseconds::period::den << "s" << endl;
+
   }
 
   pcl::PointXYZI thisPose3D;
@@ -2284,12 +2312,11 @@ PointCloud GlobalManager::composeGlobalMap()
 
     // Service get map periodically
     if (subscription.init_map_client_.call(srv)){
-      ROS_WARN("Successful to call service init map");
       PointCloudPtr initSubmap(new PointCloud);
       pcl::fromROSMsg(srv.response.submap, *initSubmap);
       local_map_stack[subscription.robot_id - start_robot_id_] = *initSubmap;
     }else{
-      ROS_WARN("Failed to call service init map");
+      // ROS_WARN("Failed to call service init map");
     }
     init_state_vec.emplace_back(subscription.initState);
   }
@@ -2302,6 +2329,8 @@ PointCloud GlobalManager::composeGlobalMap()
  
   auto merge_start = system_clock::now();
 
+  PointCloudI oneIteration;
+  oneIteration.clear();
   // TODO: GEM merge
   for (int i = 0; i < nrRobots; i++) {
     Eigen::Isometry3f T = Eigen::Isometry3f::Identity();
@@ -2337,6 +2366,7 @@ PointCloud GlobalManager::composeGlobalMap()
           PointCloudI cloud = *subscription.keyframes[k-1];
           pcl::transformPointCloud(cloud, Keyframe, transformMatrix); 
           merged_pointcloud += Keyframe;
+          oneIteration += Keyframe;
         }
       }
 
@@ -2358,9 +2388,17 @@ PointCloud GlobalManager::composeGlobalMap()
         Eigen::Matrix4f transformMatrix = T.matrix();
         pcl::transformPointCloud(*subscription.keyframes.back(), Keyframe, transformMatrix); 
         merged_pointcloud += Keyframe;
+        oneIteration += Keyframe;
       }
     }
   }
+  pcl::VoxelGrid<PointTI> keyframe_voxel;
+  keyframe_voxel.setInputCloud (oneIteration.makeShared());
+  keyframe_voxel.setLeafSize (globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_);
+  keyframe_voxel.filter (oneIteration);
+  publishOneIterationPointcloud(oneIteration);
+
+
 
   pcl::VoxelGrid<PointTI> voxel;
   voxel.setInputCloud (merged_pointcloud.makeShared());
@@ -2398,6 +2436,7 @@ void GlobalManager::mapComposing()
 
   // Get merged map
   if(mapNeedsToBeCorrected){
+    ROS_INFO("Map Composing with map correction");
     merged_map.clear();
     // PointCloudPtr cloud(new PointCloud);
     merged_map = composeGlobalMap();
@@ -2484,6 +2523,22 @@ void GlobalManager::publishMergedPointcloud()
   ROS_DEBUG("publishMergedPointcloud: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
 }
 
+/*
+ * Publish one Iteration point cloud
+ */
+void GlobalManager::publishOneIterationPointcloud(PointCloudI & oneIteration_pointcloud)
+{
+  auto start = system_clock::now();
+
+  sensor_msgs::PointCloud2 output;
+  pcl::toROSMsg(oneIteration_pointcloud, output);
+  output.header.frame_id = global_map_frame_;
+  one_iteration_pointcloud_publisher_.publish(output);
+  ROS_INFO("publish one iteration point cloud with %d points", oneIteration_pointcloud.size());
+  auto end = system_clock::now();
+  auto duration = duration_cast<microseconds>(end - start);
+  ROS_DEBUG("publishOneIterationPointcloud: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
+}
 
 /*
  * Get robot name from topic name

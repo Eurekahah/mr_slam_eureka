@@ -224,7 +224,7 @@ bool ElevationMapping::initialize()
 
   Duration(1.0).sleep(); // Need this to get the TF caches fill up.
   resetMapUpdateTimer();
-  Record_txt.open("/home/mav-lab/DenseTimeAndMemUsage.txt");
+  Record_txt.open("/home/eureka/DenseTimeAndMemUsage.txt");
 
   octoTree = new octomap::ColorOcTree(octoResolution_);
   globalOctoTree = new octomap::ColorOcTree(octoResolution_);  
