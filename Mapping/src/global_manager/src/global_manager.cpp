@@ -34,8 +34,9 @@ GlobalManager::GlobalManager(ros::NodeHandle private_nh) : nrRobots(0), node_(pr
   private_nh.param("composing_rate", composing_rate_, 1.0);
   private_nh.param("tf_publish_rate", tf_publish_rate_, 1.0);
   // private_nh.param("icp_filter_size", icp_filter_size_, 0.4);
-  // private_nh.param("loop_detection_rate", loop_detection_rate_, 10.0);
+  private_nh.param("loop_detection_rate", loop_detection_rate_, 10.0);
   private_nh.param("pose_graph_pub_rate", pose_graph_pub_rate_, 10.0);
+  private_nh.param("global_pointcloud_pub_rate", global_pointcloud_pub_rate_, 1.0);
   private_nh.param("submap_voxel_leaf_size", submap_voxel_leaf_size_, 0.3);
   private_nh.param("globalmap_voxel_leaf_size", globalmap_voxel_leaf_size_, 0.3);
   private_nh.param("keyframe_search_candidates", keyframe_search_candidates_, 20.0);
@@ -685,7 +686,6 @@ void GlobalManager::publishTFThread()
       auto start = system_clock::now();
       
       publishTF();
-      // publishPoseGraph();
 
       auto end = system_clock::now();
       auto duration = duration_cast<microseconds>(end - start);
@@ -711,6 +711,17 @@ void GlobalManager::publishPoseGraphThread()
 }
 
 
+void GlobalManager::publishGlobalPointcloudThread()
+{
+  ros::Rate rate(global_pointcloud_pub_rate_);
+  while(ros::ok()){
+    rate.sleep();
+
+    publishMergedPointcloud();
+  }
+  ROS_ERROR("ROS down !!!");
+}
+
 /*
  * Map composing thread
  */
@@ -723,8 +734,8 @@ void GlobalManager::mapComposingThread()
     auto start = system_clock::now();
     if(nrRobots != 0){
       mapComposing();
-      publishMergedMap();
-      publishMergedPointcloud();
+      // publishMergedMap();
+      // publishMergedPointcloud();
     }
     auto end = system_clock::now();
     auto duration = duration_cast<microseconds>(end - start);
@@ -737,46 +748,46 @@ void GlobalManager::mapComposingThread()
 /*
  * Loop closing thread
  */
-// void GlobalManager::loopClosingThread()
-// {
-//   if(loopClosureEnable_ == false)
-//     return;
+void GlobalManager::loopClosingThread()
+{
+  if(loopClosureEnable_ == false)
+    return;
   
-//   ros::Rate rate(loop_detection_rate_);
-//   while(ros::ok()){
-//     rate.sleep();
+  ros::Rate rate(loop_detection_rate_);
+  while(ros::ok()){
+    rate.sleep();
     
-//     auto start = system_clock::now();
+    // auto start = system_clock::now();
     
-//     if(!useOtherDescriptor_)
-//       performLoopClosure();
+    // if(!useOtherDescriptor_)
+    //   performLoopClosure();
       
-//     auto end = system_clock::now();
-//     auto duration = duration_cast<microseconds>(end - start);
-//     ROS_DEBUG("performLoopClosure: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
+    // auto end = system_clock::now();
+    // auto duration = duration_cast<microseconds>(end - start);
+    // ROS_DEBUG("performLoopClosure: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);
     
-//     auto update_start = system_clock::now();
+    auto update_start = system_clock::now();
 
-//     if(aLoopIsClosed || (loop_num >= 2)){
-//       auto correct_start = system_clock::now();
+    if(aLoopIsClosed || (loop_num >= 2)){
+      auto correct_start = system_clock::now();
       
-//       std::pair<Values, vector<int>> correctedPosePair = correctPoses();
+      std::pair<Values, vector<int>> correctedPosePair = correctPoses();
       
-//       auto correct_end = system_clock::now();
-//       auto correct_duration = duration_cast<microseconds>(correct_end - correct_start);
-//       ROS_INFO("correctPoses: %lfs", double(correct_duration.count()) * microseconds::period::num / microseconds::period::den);
+      auto correct_end = system_clock::now();
+      auto correct_duration = duration_cast<microseconds>(correct_end - correct_start);
+      ROS_INFO("correctPoses: %lfs", double(correct_duration.count()) * microseconds::period::num / microseconds::period::den);
       
-//       updateTransform(correctedPosePair);
-//       mapNeedsToBeCorrected = true;
-//       keyframeUpdated = false;
-//     }
+      updateTransform(correctedPosePair);
+      mapNeedsToBeCorrected = true;
+      keyframeUpdated = false;
+    }
     
-//     auto update_end = system_clock::now();
-//     auto update_duration = duration_cast<microseconds>(update_end - update_start);
-//     ROS_DEBUG("updateTransform: %lfs", double(update_duration.count()) * microseconds::period::num / microseconds::period::den);
-//   }
-//   ROS_ERROR("ROS down !!!");
-// }
+    auto update_end = system_clock::now();
+    auto update_duration = duration_cast<microseconds>(update_end - update_start);
+    ROS_DEBUG("updateTransform: %lfs", double(update_duration.count()) * microseconds::period::num / microseconds::period::den);
+  }
+  ROS_ERROR("ROS down !!!");
+}
 
 
 /*
@@ -2365,7 +2376,6 @@ PointCloud GlobalManager::composeGlobalMap()
           Eigen::Matrix4f transformMatrix = T.matrix();
           PointCloudI cloud = *subscription.keyframes[k-1];
           pcl::transformPointCloud(cloud, Keyframe, transformMatrix); 
-          merged_pointcloud += Keyframe;
           oneIteration += Keyframe;
         }
       }
@@ -2387,7 +2397,6 @@ PointCloud GlobalManager::composeGlobalMap()
         Eigen::Isometry3f T = optMapTF[subscription.robot_id - start_robot_id_].back() * originMapTF[subscription.robot_id - start_robot_id_].back();
         Eigen::Matrix4f transformMatrix = T.matrix();
         pcl::transformPointCloud(*subscription.keyframes.back(), Keyframe, transformMatrix); 
-        merged_pointcloud += Keyframe;
         oneIteration += Keyframe;
       }
     }
@@ -2398,6 +2407,7 @@ PointCloud GlobalManager::composeGlobalMap()
   keyframe_voxel.filter (oneIteration);
   publishOneIterationPointcloud(oneIteration);
 
+  merged_pointcloud += oneIteration;
 
 
   pcl::VoxelGrid<PointTI> voxel;
@@ -2426,7 +2436,14 @@ PointCloud GlobalManager::composeGlobalMap()
  */
 void GlobalManager::mapComposing()
 {
+  // std::lock_guard<std::mutex> stackLock(stack_mutex_); // 添加对共享数据的保护
   ROS_DEBUG("Map Composing started.");
+  ROS_DEBUG("global_map_stack.empty = %d", global_map_stack.empty());
+  ROS_DEBUG("global_map_stack.size = %d", global_map_stack.size());
+  ROS_DEBUG("nrRobots = %d", nrRobots);
+  ROS_DEBUG("originMapTF.empty = %d", originMapTF.empty());
+  ROS_DEBUG("aLoopIsClosed = %d", aLoopIsClosed);
+
   if (global_map_stack.size() != nrRobots || originMapTF.empty() || aLoopIsClosed){
     ROS_DEBUG("global_map_stack size: %d, originMapTF.empty(): %d", global_map_stack.size(), originMapTF.empty());
     return;
@@ -2494,7 +2511,7 @@ void GlobalManager::publishTF()
 void GlobalManager::publishMergedMap()
 {
   auto start = system_clock::now();
-
+  
   sensor_msgs::PointCloud2 output;
   pcl::toROSMsg(merged_map+local_maps, output);
   output.header.frame_id = global_map_frame_;
@@ -2512,6 +2529,17 @@ void GlobalManager::publishMergedMap()
 void GlobalManager::publishMergedPointcloud()
 {
   auto start = system_clock::now();
+  if(merged_pointcloud.empty()){
+    ROS_WARN("Merged point cloud is empty!");
+    return;
+  }
+  if(merged_pointcloud.size() > 1000000){
+    pcl::VoxelGrid<PointTI> voxel;
+    voxel.setInputCloud (merged_pointcloud.makeShared());
+    voxel.setLeafSize (globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_, globalmap_voxel_leaf_size_);
+    voxel.filter (merged_pointcloud);
+  }
+  std::lock_guard<std::mutex> mergedMaplock(merged_map_mutex);
 
   sensor_msgs::PointCloud2 output;
   pcl::toROSMsg(merged_pointcloud, output);
@@ -2534,7 +2562,6 @@ void GlobalManager::publishOneIterationPointcloud(PointCloudI & oneIteration_poi
   pcl::toROSMsg(oneIteration_pointcloud, output);
   output.header.frame_id = global_map_frame_;
   one_iteration_pointcloud_publisher_.publish(output);
-  ROS_INFO("publish one iteration point cloud with %d points", oneIteration_pointcloud.size());
   auto end = system_clock::now();
   auto duration = duration_cast<microseconds>(end - start);
   ROS_DEBUG("publishOneIterationPointcloud: %lfs", double(duration.count()) * microseconds::period::num / microseconds::period::den);

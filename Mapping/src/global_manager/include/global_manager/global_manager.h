@@ -191,6 +191,7 @@ private:
   double discovery_rate_;
   double tf_publish_rate_;
   double pose_graph_pub_rate_;
+  double global_pointcloud_pub_rate_;
   double submap_voxel_leaf_size_;
   double globalmap_voxel_leaf_size_;
   double keyframe_search_candidates_;
@@ -388,6 +389,12 @@ public:
    * @details publish pose graph
    */
   void publishPoseGraphThread();
+
+  /**
+   * @brief Global point cloud thread.
+   * @details publish global point cloud
+   */
+  void publishGlobalPointcloudThread();
 
   /**
    * @brief Map compositing thread.

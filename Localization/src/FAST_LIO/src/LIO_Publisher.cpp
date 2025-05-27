@@ -144,10 +144,10 @@ void LIO_Pub::OdomCallback(nav_msgs::Odometry msg)
         Eigen::Matrix4d transformMatrix = transform.inverse().matrix();
         pcl::transformPointCloud(*registeredCloud, *registeredCloudBody, transformMatrix);
 
-        pcl::VoxelGrid<pcl::PointXYZI> voxel;
-        voxel.setInputCloud (registeredCloudBody);
-        voxel.setLeafSize (0.2, 0.2, 0.2);
-        voxel.filter (*registeredCloudBody);
+        // pcl::VoxelGrid<pcl::PointXYZI> voxel;
+        // voxel.setInputCloud (registeredCloudBody);
+        // voxel.setLeafSize (0.2, 0.2, 0.2);
+        // voxel.filter (*registeredCloudBody);
 
         sensor_msgs::PointCloud2 output;
         pcl::toROSMsg(*registeredCloudBody, output);
@@ -179,10 +179,10 @@ void LIO_Pub::PCCallback(sensor_msgs::PointCloud2 msg)
     pcl::PointCloud<pcl::PointXYZI>::Ptr localRegisteredCloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromPCLPointCloud2(registeredCloudPCL, *localRegisteredCloud);
 
-    pcl::VoxelGrid<pcl::PointXYZI> voxel;
-    voxel.setInputCloud (localRegisteredCloud);
-    voxel.setLeafSize (0.2, 0.2, 0.2);
-    voxel.filter (*localRegisteredCloud);
+    // pcl::VoxelGrid<pcl::PointXYZI> voxel;
+    // voxel.setInputCloud (localRegisteredCloud);
+    // voxel.setLeafSize (0.2, 0.2, 0.2);
+    // voxel.filter (*localRegisteredCloud);
     *registeredCloud += *localRegisteredCloud;
     // pointCloud.push_back(localRegisteredCloud);
 }

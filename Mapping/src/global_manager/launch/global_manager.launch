@@ -36,7 +36,7 @@
     <param name="keyframe_saving_dir" value="$(find global_manager)/log/Keyframes/"/>   
 
     <!-- specific parameters -->
-    <param name="start_robot_id" value="1"/>
+    <param name="start_robot_id" value="1"/> <!-- start from 1 for solo 2 or 3 you need to change this into 2 or 3.-->
     <param name="composing_rate" value="3"/>
     <param name="tf_publish_rate" value="10"/>
     <param name="disco_dim" value="1024"/>
@@ -46,6 +46,7 @@
     <param name="pcm_thresh" value="0.01"/>
     <param name="loop_detection_rate" value="0.1"/>
     <param name="pose_graph_pub_rate" value="1"/>
+    <param name="global_pointcloud_pub_rate" value="1"/>
     <param name="DiSCO_dist_thres" value="17.0"/>
 
     <!-- icp params: registration_method choose from PCL_ICP, PCL_GICP, FAST_GICP, FAST_VGICP_CUDA-->

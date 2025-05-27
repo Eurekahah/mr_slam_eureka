@@ -2,14 +2,19 @@
 
     <param name="/use_sim_time" value="true" />
 
+    <arg name="lidar_type" default="mid360" /> 
+    <!-- ouster64 -->
+
+    <!-- Robot 1 -->
+    
     <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping_client1" output="screen" > 
-    	<rosparam command="load" file="$(find fast_lio)/config/ouster64_1.yaml" />        
+    	<rosparam command="load" file="$(find fast_lio)/config/$(arg lidar_type)_1.yaml" />        
       <param name="NameSpace" type="string" value="robot_1" />
       <param name="feature_extract_enable" type="bool" value="0"/>
       <param name="point_filter_num" type="int" value="4"/>
       <param name="max_iteration" type="int" value="2" />
-      <param name="filter_size_surf" type="double" value="0.8" />
-      <param name="filter_size_map" type="double" value="0.8" />
+      <param name="filter_size_surf" type="double" value="1.0" /> <!--ouster64 uses 0.8-->
+      <param name="filter_size_map" type="double" value="1.0" /> <!--0.8-->
       <param name="cube_side_length" type="double" value="800" />
       <param name="runtime_pos_log_enable" type="bool" value="0" />
     </node>	
@@ -18,17 +23,18 @@
       <param name="RobotID" type="int" value="1" />
       <param name="NameSpace" type="string" value="robot_1" /> 
       <param name="SensorName" type="string" value="os_sensor" /> 
-      <param name="dis_th" type="double" value="1.5" />
+      <param name="dis_th" type="double" value="0.5" />
     </node>
 
+    <!-- Robot 2 -->
     <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping_client2" output="screen" > 
-    	<rosparam command="load" file="$(find fast_lio)/config/ouster64_2.yaml" />        
+    	<rosparam command="load" file="$(find fast_lio)/config/$(arg lidar_type)_2.yaml" />        
       <param name="NameSpace" type="string" value="robot_2" />
       <param name="feature_extract_enable" type="bool" value="0"/>
       <param name="point_filter_num" type="int" value="4"/>
       <param name="max_iteration" type="int" value="2" />
-      <param name="filter_size_surf" type="double" value="0.8" />
-      <param name="filter_size_map" type="double" value="0.8" />
+      <param name="filter_size_surf" type="double" value="1.0" />
+      <param name="filter_size_map" type="double" value="1.0" />
       <param name="cube_side_length" type="double" value="800" />
       <param name="runtime_pos_log_enable" type="bool" value="0" />
     </node>	
@@ -37,17 +43,18 @@
       <param name="RobotID" type="int" value="2" />
       <param name="NameSpace" type="string" value="robot_2" /> 
       <param name="SensorName" type="string" value="os_sensor" /> 
-      <param name="dis_th" type="double" value="1.5" />
+      <param name="dis_th" type="double" value="0.5" />
     </node>
 
+    <!-- Robot 3 -->
     <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping_client3" output="screen" > 
-    	<rosparam command="load" file="$(find fast_lio)/config/ouster64_3.yaml" />        
+    	<rosparam command="load" file="$(find fast_lio)/config/$(arg lidar_type)_3.yaml" />        
       <param name="NameSpace" type="string" value="robot_3" />
       <param name="feature_extract_enable" type="bool" value="0"/>
       <param name="point_filter_num" type="int" value="4"/>
       <param name="max_iteration" type="int" value="2" />
-      <param name="filter_size_surf" type="double" value="0.8" />
-      <param name="filter_size_map" type="double" value="0.8" />
+      <param name="filter_size_surf" type="double" value="1.0" />
+      <param name="filter_size_map" type="double" value="1.0" />
       <param name="cube_side_length" type="double" value="800" />
       <param name="runtime_pos_log_enable" type="bool" value="0" />
     </node>	
@@ -56,7 +63,7 @@
       <param name="RobotID" type="int" value="3" />
       <param name="NameSpace" type="string" value="robot_3" /> 
       <param name="SensorName" type="string" value="os_sensor" /> 
-      <param name="dis_th" type="double" value="1.5" />
+      <param name="dis_th" type="double" value="0.5" />
     </node>
 
 </launch>
